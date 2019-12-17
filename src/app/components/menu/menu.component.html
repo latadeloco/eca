@@ -1,0 +1,25 @@
+<ion-menu
+  contentId="menu-content"
+  menuId="menu-content"
+  side="start"
+  type="overlay"
+>
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Awesome avocado menu</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-content>
+    <ion-list *ngFor="let optMenu of opcionesMenu | async">
+        <ion-item [routerLink]="optMenu.urlRuta" (click)="toggle()">
+          <ion-icon
+            slot="start"
+            [name]="optMenu.icono"
+          ></ion-icon>
+  
+          <ion-label> {{ optMenu.titulo }} </ion-label>
+        </ion-item>
+    </ion-list>
+  </ion-content>
+</ion-menu>

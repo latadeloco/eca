@@ -1,0 +1,50 @@
+// Contenedores principales
+//.registro ,
+.comunidades ,
+.iban ,
+.propietario ,
+.concepto ,
+.piso ,
+.importe {
+    display: flex;
+}
+
+.comunidades, .iban {
+    width: 50%;
+    height: 50%;
+}
+
+.contenedor-comunidades {
+    margin-left: 2.5rem;
+    width: 100%;
+}
+
+.selector-iban {
+    width: 350px;
+}
+
+.texto-propietario, .texto-concepto {
+    margin-left: 2rem;
+}
+.texto-piso {
+    margin-left: 4.6rem;
+}
+.numero-importe {
+    margin-left: 2.7rem;
+}
+
+// Lista de registros
+
+.container {
+	overflow-x: auto;
+	white-space: nowrap;
+}
+
+table, th, td {
+    width: 100%;
+    border: 1px solid black;
+}
+	
+th, td {
+    padding: .5em 1em;
+}

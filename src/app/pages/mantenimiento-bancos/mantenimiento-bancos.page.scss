@@ -1,0 +1,15 @@
+// Lista de registros
+
+.container {
+	overflow-x: auto;
+	white-space: nowrap;
+}
+
+table, th, td {
+    width: 100%;
+    border: 1px solid black;
+}
+	
+th, td {
+    padding: .5em 1em;
+}

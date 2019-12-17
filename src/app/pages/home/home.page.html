@@ -1,0 +1,388 @@
+<app-header></app-header>
+
+<ion-content class="ion-padding">
+  <ion-card>
+    <ion-card-title padding="padding">Añadir registro</ion-card-title>
+
+    <ion-card-content>
+      <div class="registro">
+        <ion-grid>
+          <ion-row>
+            <ion-col
+              size="6"
+              style="display: flex; align-items: center;"
+            >
+              <div class="comunidades">
+                <div class="titulo-comunidad">
+                  <ion-label>Comunidad:</ion-label>
+                </div>
+
+                <div class="selector-comunidad">
+                  <select
+                    class="contenedor-comunidades"
+                    name="comunidades"
+                    id="comunidades"
+                  >
+                    <option value="1">
+                      Cine Pastora.- Vivienda en sanlucar de barrameda numero tal cual bla bla bal balasd fdas fdas fdas fas
+                    </option>
+
+                    <option value="1">Comunidad 1</option>
+
+                    <option value="1">Comunidad 1</option>
+
+                    <option value="1">Comunidad 1</option>
+
+                    <option value="1">Comunidad 1</option>
+
+                    <option value="1">Comunidad 1</option>
+                  </select>
+                </div>
+              </div>
+            </ion-col>
+
+            <ion-col size="6">
+              <ion-row>
+                <ion-col
+                  size="12"
+                  style="display: flex; align-items: center;"
+                >
+                  <div class="iban">
+                    <ion-col size="4">
+                      <div class="titulo-iban">
+                        <ion-label>IBAN:</ion-label>
+                      </div>
+                    </ion-col>
+
+                    <ion-col size="8">
+                      <div class="selector-iban">
+                        <select
+                          class="contenedor-iban"
+                          name="iban"
+                          id="iban"
+                        >
+                          <option value="1">
+                            ES42 0081 5635 0400 0172 2223 - Nombre Banco
+                          </option>
+
+                          <option value="1">IBAN 2</option>
+
+                          <option value="1">IBAN 3</option>
+                        </select>
+                      </div>
+                    </ion-col>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <div
+                class="propietario"
+                style="display: flex; align-items: center;"
+              >
+                <div class="titulo-propietario">
+                  <ion-label>Propietario:</ion-label>
+                </div>
+
+                <div class="texto-propietario">
+                  <ion-input
+                    type="text"
+                    placeholder="Introducir nombre del propietario"
+                  ></ion-input>
+                </div>
+              </div>
+            </ion-col>
+
+            <ion-col size="6">
+              <div
+                class="concepto"
+                style="display: flex; align-items: center;"
+              >
+                <div class="titulo-concepto">
+                  <ion-label>Concepto:</ion-label>
+                </div>
+
+                <div class="texto-concepto">
+                  <ion-input
+                    type="text"
+                    placeholder="Introducir concepto"
+                  ></ion-input>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+
+        <ion-grid>
+          <ion-row>
+            <ion-col size="6">
+              <div
+                class="piso"
+                style="display: flex; align-items: center;"
+              >
+                <div class="titulo-piso">
+                  <ion-label>Piso:</ion-label>
+                </div>
+
+                <div class="texto-piso">
+                  <ion-input
+                    type="text"
+                    placeholder="Introducir piso"
+                  ></ion-input>
+                </div>
+              </div>
+            </ion-col>
+
+            <ion-col size="6">
+              <div
+                class="importe"
+                style="display: flex; align-items: center;"
+              >
+                <div class="titulo-importe">
+                  <ion-label>Importe:</ion-label>
+                </div>
+
+                <div class="numero-importe">
+                  <ion-input
+                    type="number"
+                    placeholder="Importe"
+                  ></ion-input>
+                </div>
+              </div>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
+      </div>
+      <div style="display: flex; justify-content: flex-end;">
+        <ion-button (click)="onClick()">Añadir</ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+  <ion-list>
+    <ion-list-header>
+      <ion-label>Lista de registros:</ion-label>
+    </ion-list-header>
+
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>Comunidad</th>
+
+            <th>Concepto</th>
+
+            <th>Importe</th>
+
+            <th>IBAN</th>
+
+            <th>Piso</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+
+          <tr>
+            <td>CINE PASTORA.- VIVIE</td>
+
+            <td>
+              JUAN ESPINAR SALGADO F.ing: 02/01/2018
+            </td>
+
+            <td>29,24€</td>
+
+            <td>0081 5635 0400 0172 2223</td>
+
+            <td></td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  </ion-list>
+</ion-content>

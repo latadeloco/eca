@@ -1,0 +1,12 @@
+[
+    {
+        "icono" : "business",
+        "titulo" : "Mantenimiento de Comunidades",
+        "urlRuta" : "/mantenimiento-comunidades"
+    },
+    {
+        "icono" : "logo-usd",
+        "titulo" : "Mantenimiento de Bancos",
+        "urlRuta" : "/mantenimiento-bancos"
+    }
+]
