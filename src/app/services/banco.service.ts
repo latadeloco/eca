@@ -6,7 +6,7 @@ import { HttpClient } from '@angular/common/http';
 })
 export class BancoService {
 
-  URL = "http://localhost/eurocaja/api/";
+  URL = "http://192.168.0.116/eurocaja/api/";
   bancos = null;
   banco = {
     nombre_banco : null,
@@ -18,16 +18,65 @@ export class BancoService {
 
   }
   
-  getBanco() {
+  /**
+   * Obtener todos los bancos
+   * return Observable
+   */
+  getBancos() {
     return this.http.get(`${this.URL}bancos/bancos.php`);
   }
+  
+  /**
+   * Obtener un banco por id_asociativo_banco
+   * params id_asociativo_banco: number
+   * return Observable
+   */
+  seleccionarBancoPorIdAsociado(id_asociativo_banco: number) {
+    return this.http.get(`${this.URL}bancos/obtenerBancoPorIdAsociado.php?id_asociativo_banco=${id_asociativo_banco}`);
+  }
+  
+  /**
+   * Obtener un banco por nombre_banco
+   * params nombre_banco: string
+   * return Observable
+   */
+  seleccionarBancoPorNombre(nombre_banco: string) {
+    return this.http.get(`${this.URL}bancos/obtenerBancoPorNombre.php?nombre_banco=${nombre_banco}`);
+  }
+  
+  /**
+   * Obtener un banco por id_banco
+   * params id_banco : number
+   * return Observable
+   */
+  seleccionarBancoPorId(id_banco: number) {
+    return this.http.get(`${this.URL}/bancos/obtenerBancoPorId.php?id_banco=${id_banco}`);
+  }
+  
+  /**
+   * Modificar un banco
+   * params banco
+   * return Observable
+   */
+  
+  modificarBanco(banco) {
+    return this.http.post(`${this.URL}/bancos/modificarBanco.php`, JSON.stringify(banco));
+  }
 
+  /**
+   * Insertar un banco
+   * return Observable
+   */
   altaBanco(banco) {
     return this.http.post(`${this.URL}bancos/altaBanco.php`, JSON.stringify(banco), {responseType: 'text'});
   }
 
-  bajaUsuario(idUsuario: number) {
-    return this.http.get(`${this.URL}BajaUsuario.php?idUsuario=${idUsuario}`);
+  /**
+   * Eliminar un banco
+   * @param id_banco Identificador único de banco
+   * @returns Observable
+   */
+  eliminarBanco(id_banco : number) {
+    return this.http.get(`${this.URL}/bancos/bajaBanco.php?id_banco=${id_banco}`);
   }
-
 }

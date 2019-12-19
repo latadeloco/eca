@@ -7,7 +7,7 @@
   
 
   // REALIZA LA QUERY A LA DB
-  mysqli_query($conexion, "DELETE FROM banco WHERE id_banco=$_GET[id_banco]");
+  mysqli_query($conexion, "DELETE FROM comunidad WHERE id_comunidad=$_GET[id_comunidad]");
       
   class Result {}
   // GENERA LOS DATOS DE RESPUESTA

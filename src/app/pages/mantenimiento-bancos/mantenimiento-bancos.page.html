@@ -14,9 +14,9 @@
               <ion-col size="2" style="display: flex; align-items: center; justify-content: center; background-color: #E0E0E0;">
                 <ion-label style="color: black">Nombre del Banco: </ion-label>
               </ion-col>
-    
               <ion-col size="10" style="border-bottom: 1px solid black;">
                 <ion-input
+                #nombre
                 [(ngModel)]="banco.nombre_banco"
                   type="text"
                   placeholder="Nombre del banco"
@@ -33,6 +33,7 @@
     
               <ion-col size="10" style="border-bottom: 1px solid black;">
                 <ion-input
+                #idAsociativo
                 [(ngModel)]="banco.id_asociativo_banco"
                   type="text"
                   min="4"
@@ -42,9 +43,12 @@
               </ion-col>
             </ion-row>
           </ion-grid>
-          <div style="display: flex; justify-content: flex-end;">
-            <ion-button (click)="altaBanco()">
+          <div class="container-botones" style="display: flex; justify-content: flex-end;">
+            <ion-button class="anadirBanco" (click)="altaModificacionBanco()">
               Añadir banco
+            </ion-button>
+            <ion-button color="danger" #eliminarBanco (click)="eliminar(banco.id_banco)" style="display:none">
+              Eliminar banco
             </ion-button>
           </div>
         </ion-card-content>
@@ -53,25 +57,38 @@
     </div>
     
 
-    <div class="container ion-padding">
-      <table>
-        <thead>
-          <tr>
-            <th>Banco</th>
-            <th>Código identificativo</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr  *ngFor="let banco of bancos ">
-            <td>{{ banco.nombre_banco[1] }}</td>
+    <div class="container-lista ion-padding">
 
-            <td>
-               {{ banco.id_asociativo_banco[1] }}
-            </td>
+      <div class="container-cabeceras">
+        <div class="elemento-listado-nombreBanco">
+          <h3>Banco</h3>
+        </div>
+        <div class="elemento-listado-idAsociativoBanco">
+          <h3>Código identificativo</h3>
+        </div>
+        <div class="elemento-listado-idBanco">
+          <h3>Acciones</h3>
+        </div>
+      </div>
 
-          </tr>
-        </tbody>
-      </table>
+
+      <div class="elementos-listado" *ngFor="let elementoListado of listado">
+        <div class="elemento-listado-nombreBanco">
+          <span>{{ elementoListado.nombreBanco }}</span>
+        </div>
+        <div class="elemento-listado-idAsociativoBanco">
+          <span> {{ elementoListado.idAsociativoBanco }} </span>
+        </div>
+        <div class="elemento-listado-idBanco">
+              <span (click)="modificarBanco(elementoListado.idBanco)">
+                <ion-icon class="icono-modificar" slot="icon-only" name="create"></ion-icon>
+              </span>
+              <span value="id" (click)="eliminar(elementoListado.idBanco)">
+                <ion-icon class="icono-borrar" slot="icon-only" name="trash"></ion-icon>
+              </span>
+        </div>
+      </div> 
+
     </div>
 
 </ion-content>

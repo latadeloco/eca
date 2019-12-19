@@ -6,22 +6,20 @@
   require("../config.php"); // IMPORTA EL ARCHIVO CON LA CONEXION A LA DB
   $conexion = conexion(); // CREA LA CONEXION
   // REALIZA LA QUERY A LA DB
-  $registros = mysqli_query($conexion, "SELECT * FROM banco");
+  $registros = mysqli_query($conexion, "SELECT * FROM comunidad");
   
-  $id_banco = array();
-  $nombre_banco = array();
-  $id_asociativo_banco = array();
+  $nombre = array();
+  $id_comunidad = array();
+
   $datos = array(
-    'id_banco' => $id_banco,
-    'nombre_banco' => $nombre_banco,
-    'id_asociativo_banco' => $id_asociativo_banco
+    'id_comunidad' => $id_comunidad,
+    'nombre' => $nombre,
   );
   // RECORRE EL RESULTADO Y LO GUARDA EN UN ARRAY
   while ($resultado = mysqli_fetch_array($registros))  
   {
-    array_push($datos['id_banco'], $resultado['id_banco']);
-    array_push($datos['nombre_banco'], $resultado['nombre_banco']);
-    array_push($datos['id_asociativo_banco'], $resultado['id_asociativo_banco']);
+    array_push($datos['id_comunidad'], $resultado['id_comunidad']);
+    array_push($datos['nombre'], $resultado['nombre']);
   }
   
   $json = json_encode($datos); // GENERA EL JSON CON LOS DATOS OBTENIDOS

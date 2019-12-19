@@ -1,19 +1,43 @@
 <app-header></app-header>
 
 <ion-content class="ion-padding">
-  <ion-searchbar placeholder="Nombre de la comunidad" inputmode="text" type="text" (ionChange)="onSearchChange($event)"></ion-searchbar>
-    <div #contenedorListado>
-    <ion-grid>
-        <ion-row *ngFor="let item of [1,1,1,1,1,1]; let i = index">
-            <ion-col size="12">
-              <ion-item>
-                <ion-label (click)="modificar()" class="entrar" #comunidad>Nombre de la comunidad</ion-label>
-                <ion-icon (click)="modificar()" class="modificar" slot="end" name="create"></ion-icon>
-                <ion-icon (click)="eliminar()" class="eliminar" slot="end" name="trash"></ion-icon>
-              </ion-item>
-            </ion-col>
-          </ion-row>
-    </ion-grid>
+    <div class="contenedor-cuenta-clicada" style="display: none;">
+      <ion-card>
+        <ion-card-title  style="text-align: center; font-size: 2rem; margin-bottom: 2rem;"> Cuenta: Aquí va el nombre de la cuenta </ion-card-title>
+        <ion-card-content class="ion-padding">
+          <div style="display: flex; justify-content: space-around;">
+            <ion-input
+              #idAsociativoBanco
+              type="text"
+              placeholder="Nombre de la comunidad"
+            ></ion-input>
+            <ion-input
+              #grupo1
+              type="text"
+              placeholder="Nombre de la comunidad"
+            ></ion-input>
+            <ion-input
+              #grupo2
+              type="text"
+              placeholder="Nombre de la comunidad"
+            ></ion-input>
+            <ion-input
+              #grupo3
+              type="text"
+              placeholder="Nombre de la comunidad"
+            ></ion-input>
+            <ion-input
+              #grupo4
+              type="text"
+              placeholder="Nombre de la comunidad"
+            ></ion-input>
+          </div>         
+          <div class="container-modificacion-cuenta-bancaria-comunidad"></div>
+          <ion-button class="modificarCuentaBancaria" (click)="modificacionCuentaBancariaSeleccionada(comunidad.id_comunidad)">
+            Modificar la cuenta Bancaria
+          </ion-button>
+        </ion-card-content>
+      </ion-card>
   </div>
   <div class="contenedor-comunidades">
     <div>
@@ -29,28 +53,86 @@
     
               <ion-col size="10" style="border-bottom: 1px solid black;">
                 <ion-input
+                  #nombreComunidad
+                  [(ngModel)]="comunidad.nombre"
                   type="text"
                   placeholder="Nombre de la comunidad"
                 ></ion-input>
               </ion-col>
             </ion-row>
           </ion-grid>
-    
-          <ion-grid>
-            <ion-row>
-              <ion-col size="12" style="text-align: center;"> <ion-title>Cuentas</ion-title></ion-col>
-            </ion-row>
-    
-            <ion-row>
-              <ion-col size="12"  style="text-align: center; font-size: 2rem; border: 1px solid #E0E0E0">ES42 0081 5635 0400 0172 2223</ion-col>
-            </ion-row>
-          </ion-grid>
+          <div>
+            <ion-grid>
+              <ion-row>
+                <ion-col size="12" style="text-align: center;"> <ion-title>Cuentas</ion-title></ion-col>
+              </ion-row>
+      
+              <ion-row>
+                <ion-col size="12"  style="text-align: center; font-size: 2rem; border: 1px solid #E0E0E0">
+                  <div class="container-cuentas-bancarias-comunidad">
+                    <div class="contenedor-por-cuenta-comunidad" *ngFor="let cuenta of cuentasBancariasComunidad" id="{{ cuenta.id_cuenta_comunidad }}">
+                      <div> {{ cuenta.id_asociativo_banco }} </div>
+                      <div> {{ cuenta.grupo1 }} </div>
+                      <div> {{ cuenta.grupo2 }} </div>
+                      <div> {{ cuenta.grupo3 }} </div>
+                      <div> {{ cuenta.grupo4 }} </div>
+                      <div class="container-acciones-cuentas">
+                        <span (click)="modificacionCuentaBancaria(cuenta.id_cuenta_comunidad, cuenta.id_comunidad)">
+                          <ion-icon class="icono-modificar" slot="icon-only" name="create"></ion-icon>
+                        </span>
+                        <span value="id" (click)="eliminacionCuentaBancaria(cuenta.id_cuenta_comunidad, cuenta.id_cuenta_comunidad)">
+                          <ion-icon class="icono-borrar" slot="icon-only" name="trash"></ion-icon>
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </ion-col>
+              </ion-row>
+            </ion-grid>
+          </div>
+
+          <div class="contenedor-boton-anadir-comunidad">
+            <ion-button class="anadirComunidad" (click)="altaOModificacionComunidad()">
+              Añadir comunidad
+            </ion-button>
+            <ion-button color="danger" #eliminarComunidad (click)="eliminaComunidad(comunidad.id_comunidad)" style="display:none">
+              Eliminar comunidad
+            </ion-button>
+            <ion-button color="success" #salirComunidad onClick="window.location.reload()" style="display:none">
+              Salir
+            </ion-button>
+          </div>
         </ion-card-content>
       </ion-card>
     </div>
   </div>
-  <ion-fab-list side="start">
-    <ion-fab-button><ion-icon name="logo-ionic"></ion-icon></ion-fab-button>
-    <ion-fab-button><ion-icon name="logo-angular"></ion-icon></ion-fab-button>
-  </ion-fab-list>
+  
+  <div class="container-listado-comunidades ion-padding">
+
+    <div class="container-cabeceras">
+      <div class="elemento-listado-comunidad">
+        <h3>Comunidad</h3>
+      </div>
+      <div class="elemento-listado-acciones">
+        <h3>Acciones</h3>
+      </div>
+    </div>
+
+
+    <div class="elementos-listado" *ngFor="let elementoListado of listado">
+      <div class="elemento-listado-comunidad">
+        <span>{{ elementoListado.nombre }}</span>
+      </div>
+      <div class="elemento-listado-acciones elemento-listado-accion">
+            <span (click)="preparadoModificacion(elementoListado.id_comunidad)">
+              <ion-icon class="icono-modificar" slot="icon-only" name="create"></ion-icon>
+            </span>
+            <span value="id" (click)="eliminaComunidad(elementoListado.id_comunidad)">
+              <ion-icon class="icono-borrar" slot="icon-only" name="trash"></ion-icon>
+            </span>
+      </div>
+    </div> 
+
+  </div>
+  
 </ion-content>

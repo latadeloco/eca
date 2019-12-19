@@ -27,6 +27,7 @@
     "core-js": "^2.5.4",
     "cors": "^2.8.5",
     "express": "^4.17.1",
+    "jquery": "^3.4.1",
     "mysql": "github:mysqljs/mysql",
     "rxjs": "~6.5.1",
     "tslib": "^1.9.0",

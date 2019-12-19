@@ -13,3 +13,49 @@ table, th, td {
 th, td {
     padding: .5em 1em;
 }
+
+
+// listado de bancos
+
+.container-cabeceras, .elementos-listado {
+    display: flex;
+}
+
+.elemento-listado-nombreBanco {
+    padding: 0.3rem;
+    width: 50%;
+}
+
+.elemento-listado-idAsociativoBanco {
+    padding: 0.3rem;
+    width: 35%;
+}
+
+.elemento-listado-acciones {
+    width: 20%;
+}
+
+.icono-modificar, .icono-borrar {
+    font-size: 1.4rem;
+}
+
+// Iconos de acciones
+
+.icono-modificar:hover, .icono-borrar:hover {
+    cursor: pointer;
+}
+
+.icono-modificar, .icono-borrar {
+    color: white;
+    border-radius: 100%;
+    padding: 0.1rem;
+}
+
+.icono-modificar {
+    background-color: green;
+    margin-right: 3px;
+}
+
+.icono-borrar {
+    background-color: red;
+}
