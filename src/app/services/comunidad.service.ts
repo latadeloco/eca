@@ -38,7 +38,7 @@ export class ComunidadService {
    * @params nombre: string
    * @return Observable
    */
-  seleccionarBancoPorNombre(nombre: string) {
+  seleccionarComunidadPorNombre(nombre: string) {
     return this.http.get(`${this.URL}comunidades/obtenerComunidadPorNombre.php?nombre=${nombre}`);
   }
 
@@ -68,5 +68,13 @@ export class ComunidadService {
    */
   eliminarComunidad(id_comunidad : number) {
     return this.http.get(`${this.URL}comunidades/bajaComunidad.php?id_comunidad=${id_comunidad}`);
+  }
+
+  /**
+   * Selecciona la última comunidad
+   * @returns Observable
+   */
+  seleccionarUltimaComunidad() {
+    return this.http.get(`${this.URL}comunidades/obtenerUltimaComunidad.php`)
   }
 }

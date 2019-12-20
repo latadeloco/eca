@@ -4,45 +4,67 @@
   
   $json = file_get_contents('php://input');
  
-  $params = json_decode($json);
+  $params = json_decode($json, true)[0];
   
 
   require("../config.php"); // IMPORTA EL ARCHIVO CON LA CONEXION A LA DB
   $conexion = conexion(); // CREA LA CONEXION
-  
-  
-  $parametroEnPrimeraQuery = $params[0]->id_asociativo_banco[0];
+
+
+  if (is_array($params['id_asociativo_banco'])) {
+    $id_asociativo_banco = implode("','", $params['id_asociativo_banco']);
+  } else {
+    $id_asociativo_banco = $params['id_asociativo_banco'];
+  }
 
   // REALIZA LA QUERY A LA DB
-  $query = mysqli_query($conexion, "SELECT id_banco FROM banco WHERE banco.id_asociativo_banco=$parametroEnPrimeraQuery");
+  $query = mysqli_query($conexion, "SELECT banco.id_banco 
+                                    FROM   banco
+                                    WHERE  banco.id_asociativo_banco='$id_asociativo_banco'");
 
-  $id_asociativo_banco_array = array();
-  while ($resultadoQuery = mysqli_fetch_array($query))  
-  {
-      echo var_dump($resultadoQuery);
-      $id_asociativo_banco_array[] = $resultadoQuery['id_banco'];
-    }
-    
-    die();
+$id_banco_array = array();
+if ($resultadoQuery = mysqli_fetch_array($query))  
+{
+  $id_banco_array[] = $resultadoQuery['id_banco'];
+}    
 
-  $grupo1 = $params[0]->grupo1;
-  $grupo2 = $params[0]->grupo2;
-  $grupo3 = $params[0]->grupo3;
-  $grupo4 = $params[0]->grupo4;
-  $id_cuenta_comunidad = $params[0]->id_cuenta_comunidad;
- // $id_asociativo_banco = $id_asociativo_banco_array;
+  $id_banco = implode("','", $id_banco_array);
+
+  if (is_array($params['grupo1'])) {
+    $grupo1 = implode("','",$params['grupo1']);
+  } else {
+    $grupo1 = $params['grupo1'];
+  }
+
+  if (is_array($params['grupo2'])) {
+    $grupo2 = implode("','",$params['grupo2']);
+  } else {
+    $grupo2 = $params['grupo2'];
+  }
+
+  if (is_array($params['grupo3'])) {
+    $grupo3 = implode("','",$params['grupo3']);
+  } else {
+    $grupo3 = $params['grupo3'];
+  }
+
+  if (is_array($params['grupo4'])) {
+    $grupo4 = implode("','",$params['grupo4']);
+  } else {
+    $grupo4 = $params['grupo4'];
+  }
+
+  $id_cuenta_comunidad = $params['id_cuenta_comunidad'];
+
   
-  echo var_dump($id_asociativo_banco_array);
-  die();
-
-  mysqli_query($conexion, "UPDATE cuentacomunidad
+  mysqli_query($conexion, "UPDATE `cuentacomunidad`
     SET 
-        id_asociativo_banco=$id_asociativo_banco,
-        grupo1='$grupo1',
-        grupo2='$grupo2',
-        grupo3='$grupo3',
-        grupo4='$grupo4'
-    WHERE id_cuenta_comunidad='$id_cuenta_comunidad'");
+        `id_asociativo_banco`='$id_banco',
+        `grupo1`='$grupo1',
+        `grupo2`='$grupo2',
+        `grupo3`='$grupo3',
+        `grupo4`='$grupo4'
+    WHERE `cuentacomunidad`.`id_cuenta_comunidad`='$id_cuenta_comunidad'");
     
   
   class Result {}

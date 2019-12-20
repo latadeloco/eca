@@ -4,14 +4,23 @@
   
   $json = file_get_contents('php://input'); // RECIBE EL JSON DE ANGULAR
  
-  $params = json_decode($json); // DECODIFICA EL JSON Y LO GUARADA EN LA VARIABLE
+  $params = json_decode($json, true); // DECODIFICA EL JSON Y LO GUARADA EN LA VARIABLE
   
   require("../config.php"); // IMPORTA EL ARCHIVO CON LA CONEXION A LA DB
   $conexion = conexion(); // CREA LA CONEXION
 
+
+  if (is_array($params)) {
+    $nombre_banco = $params['nombreBanco'];
+    $id_asociativo_banco = $params['idAsociativoBanco'];
+  } else {
+    $nombre_banco = $params->nombre_banco;
+    $id_asociativo_banco = $params->id_asociativo_banco;
+  }
+
   // REALIZA LA QUERY A LA DB
   mysqli_query($conexion, "INSERT INTO banco(nombre_banco, id_asociativo_banco) VALUES
-                  ('$params->nombre_banco','$params->id_asociativo_banco')");    
+                  ('$nombre_banco','$id_asociativo_banco')");    
   
   class Result {}
   // GENERA LOS DATOS DE RESPUESTA

@@ -3,7 +3,7 @@
 <ion-content class="ion-padding">
     <div class="contenedor-cuenta-clicada" style="display: none;">
       <ion-card>
-        <ion-card-title  style="text-align: center; font-size: 2rem; margin-bottom: 2rem;"> Cuenta: Aquí va el nombre de la cuenta </ion-card-title>
+        <ion-card-title  style="text-align: center; font-size: 2rem; margin-bottom: 2rem;"> Cuenta: {{ tituloCuentaBancariaAModificar }} </ion-card-title>
         <ion-card-content class="ion-padding">
           <div style="display: flex; justify-content: space-around;">
             <ion-input
@@ -34,7 +34,10 @@
           </div>         
           <div class="container-modificacion-cuenta-bancaria-comunidad"></div>
           <ion-button class="modificarCuentaBancaria" (click)="modificacionCuentaBancariaSeleccionada(comunidad.id_comunidad)">
-            Modificar la cuenta Bancaria
+            Modificar cuenta Bancaria
+          </ion-button>
+          <ion-button class="anadirCuentaBancaria" (click)="altaCuentaBancaria(comunidad.id_comunidad)">
+            Añadir cuenta Bancaria
           </ion-button>
         </ion-card-content>
       </ion-card>
@@ -64,12 +67,13 @@
           <div>
             <ion-grid>
               <ion-row>
-                <ion-col size="12" style="text-align: center;"> <ion-title>Cuentas</ion-title></ion-col>
+                <ion-col size="12" style="text-align: center;" *ngIf="cuentasBancariasComunidad.length !== 0"> <ion-title>Cuentas</ion-title></ion-col>
               </ion-row>
       
               <ion-row>
-                <ion-col size="12"  style="text-align: center; font-size: 2rem; border: 1px solid #E0E0E0">
-                  <div class="container-cuentas-bancarias-comunidad">
+                <ion-col size="12"  style="text-align: center; font-size: 2rem; border: 1px solid #E0E0E0"
+                *ngIf="cuentasBancariasComunidad.length !== 0">
+                  <div class="container-cuentas-bancarias-comunidad" >
                     <div class="contenedor-por-cuenta-comunidad" *ngFor="let cuenta of cuentasBancariasComunidad" id="{{ cuenta.id_cuenta_comunidad }}">
                       <div> {{ cuenta.id_asociativo_banco }} </div>
                       <div> {{ cuenta.grupo1 }} </div>
@@ -87,20 +91,36 @@
                     </div>
                   </div>
                 </ion-col>
+                <ion-col size="12" *ngIf="cuentasBancariasComunidad.length === 0 && !principal">
+                  <div>
+                    <h3>No hay cuentas asociadas a la comunidad</h3>
+                  </div>
+                  <div>
+                  </div>
+                </ion-col>
               </ion-row>
             </ion-grid>
           </div>
-
-          <div class="contenedor-boton-anadir-comunidad">
-            <ion-button class="anadirComunidad" (click)="altaOModificacionComunidad()">
-              Añadir comunidad
-            </ion-button>
-            <ion-button color="danger" #eliminarComunidad (click)="eliminaComunidad(comunidad.id_comunidad)" style="display:none">
-              Eliminar comunidad
-            </ion-button>
-            <ion-button color="success" #salirComunidad onClick="window.location.reload()" style="display:none">
-              Salir
-            </ion-button>
+          <div class="contenedor-botones-mantenimiento-comunidades" style="display: flex; justify-content: space-between;">
+            <div class="contenedor-boton-cuentas-bancarias-comunidad">
+              <ion-button class="anadirBanca" (click)="redireccionComponenteCuentaClicada()" style="display: none;">
+                Añadir Cuenta Bancaria
+              </ion-button>
+            </div>
+            <div class="contenedor-boton-anadir-comunidad">
+              <ion-button class="anadirComunidad" (click)="altaOModificacionComunidad()">
+                Añadir comunidad
+              </ion-button>
+              <ion-button color="warning" class="modificarComunidadAnadida" (click)="preparadoModificacion(ultimaComunidadAnadida)" style="display:none">
+                Modificar comunidad
+              </ion-button>
+              <ion-button color="danger" #eliminarComunidad (click)="eliminaComunidad(comunidad.id_comunidad)" style="display:none">
+                Eliminar comunidad
+              </ion-button>
+              <ion-button color="success" #salirComunidad onClick="window.location.reload()" style="display:none">
+                Salir
+              </ion-button>
+            </div>
           </div>
         </ion-card-content>
       </ion-card>
