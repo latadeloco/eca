@@ -48,3 +48,78 @@ table, th, td {
 th, td {
     padding: .5em 1em;
 }
+
+
+// Estilo de comunidad
+
+.container-comunidades {
+    display: flex; 
+    justify-content: space-around;
+}
+
+.container-lista {
+    width: 100%;
+}
+
+.container-lista-cabecera {
+    width: 20%;
+}
+
+.container-seleccion-manual-existentes {
+    display: flex;
+    width: 80%;
+}
+
+.container-seleccion-manual-existentes > select, .container-seleccion-manual-existentes > ion-input {
+    width: 100%;
+}
+
+// Estilo cuenta bancaria
+
+.container-cuentas-bancarias-comunidad, .container-cuenta-bancaria-manual, .container-selector-manual-existente {
+    display: flex;
+}
+
+
+.container-cabecera-cuenta-bancaria {
+    width: 20%;
+}
+
+.container-selector-manual-existente {
+    width: 80%;
+}
+
+.container-cuentas-bancarias-comunidad, .container-cuentas-bancarias-comunidad > ion-item {
+    width: 100%;
+}
+
+.container-cuentas-existentes {
+    width: 100%;
+}
+
+.container-iban-manual {
+    display: flex;
+    justify-content: space-around;
+    width: 80%;
+}
+
+// Estilo importe, concepto y piso
+
+.container-importe, .container-concepto, .container-piso {
+    width: 100%;
+}
+
+.container-cabecera-importe, .container-cabecera-concepto, .container-cabecera-piso {
+    width: 15%;
+}
+
+.container-seleccion-importe, .container-seleccion-concepto, .container-seleccion-piso {
+    width: 85%;
+}
+
+// Estilo botón añadir registro
+
+.container-boton-registro {
+    width: 100%;
+    text-align: end;
+}

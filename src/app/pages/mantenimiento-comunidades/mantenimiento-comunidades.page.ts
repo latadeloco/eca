@@ -40,7 +40,7 @@ export class MantenimientoComunidadesPage implements OnInit {
   cuentaBancariaComunidadIdComunidad = null;
   tituloCuentaBancariaAModificar = null;
   erroresCuentaBancaria = new Array();
-
+  ultimaIdCuentaACrear = null;
 
   listado = new Array();
   errores = new Array();
@@ -204,6 +204,9 @@ export class MantenimientoComunidadesPage implements OnInit {
    * @param event 
    */
   modificacionCuentaBancaria(id_cuenta_bancaria) {
+    document.getElementsByClassName('anadirCuentaBancaria')[0]['style'].display = "none";
+    document.getElementsByClassName('modificarCuentaBancaria')[0]['style'].display = "";
+
     this.cuentaBancariaComunidadIdComunidad = id_cuenta_bancaria;
     var contCuentaComunidad = document.getElementsByClassName('contenedor-cuenta-clicada')[0];
     contCuentaComunidad['style'].display = "";
@@ -238,7 +241,7 @@ export class MantenimientoComunidadesPage implements OnInit {
   modificacionCuentaBancariaSeleccionada(id_comunidad: number) {
     this.erroresCuentaBancaria = [];
     let cuentaBancariaModificarActual = new Array();
-    let existeBanco = false;
+    
     cuentaBancariaModificarActual.push({
       "id_cuenta_comunidad" : this.cuentaBancariaComunidadIdComunidad,
       "id_asociativo_banco" : this.elementoIdeAsociativoBanco['el'].value,
@@ -246,9 +249,58 @@ export class MantenimientoComunidadesPage implements OnInit {
       "grupo2" : this.elementoGrupo2['el'].value,
       "grupo3" : this.elementoGrupo3['el'].value,
       "grupo4" : this.elementoGrupo4['el'].value,
-      
+      "id_comunidad" : id_comunidad
     });
 
+    this.comprobacionesCuentaBancaria(cuentaBancariaModificarActual, "modificacion", id_comunidad);
+
+    document.getElementsByClassName('contenedor-cuenta-clicada')[0]['style'].display = "none";
+  }
+
+  
+
+  /**
+   * Se redirecciona al panel de Cuenta Bancaria
+   */
+  redireccionComponenteCuentaClicada() {
+    document.getElementsByClassName('contenedor-cuenta-clicada')[0]['style'].display = "";
+    document.getElementsByClassName('anadirCuentaBancaria')[0]['style'].display = "";
+    document.getElementsByClassName('modificarCuentaBancaria')[0]['style'].display = "none";
+
+    this.tituloCuentaBancariaAModificar = "";
+    this.elementoIdeAsociativoBanco['el'].value = "";
+    this.elementoGrupo1['el'].value = "";
+    this.elementoGrupo2['el'].value = "";
+    this.elementoGrupo3['el'].value = "";
+    this.elementoGrupo4['el'].value = "";
+  }
+
+  /**
+   * Alta de una nueva cuenta bancaria asociada directamente a una comunidad
+   * @param id_comunidad 
+   */
+  altaCuentaBancaria(id_comunidad: number) {
+    let cuentaComunidadBancariaActual = {
+      'id_asociativo_banco' : this.elementoIdeAsociativoBanco['el'].value,
+      'grupo1' : this.elementoGrupo1['el'].value,
+      'grupo2' : this.elementoGrupo2['el'].value,
+      'grupo3' : this.elementoGrupo3['el'].value,
+      'grupo4' : this.elementoGrupo4['el'].value,
+      'id_comunidad' : id_comunidad
+    }
+    
+    this.comprobacionesCuentaBancaria(cuentaComunidadBancariaActual, 'alta', id_comunidad);
+
+    document.getElementsByClassName('contenedor-cuenta-clicada')[0]['style'].display = "none";
+  }
+
+  /**
+   * Comprobaciones de una nueva alta o una modificación de una cuenta bancaria
+   * 
+   */
+  comprobacionesCuentaBancaria(cuentaBancariaModificarActual, accion, id_comunidad) {
+    let existeBanco = false;
+    let idAsociativoBancoSegunAccion = null;
     // Comprobaciones de campos para sean una cadena de 4 dígitos exactos
     // Se comprueba si vienen en array o como cadena y se hace las comprobaciones
     
@@ -308,16 +360,37 @@ export class MantenimientoComunidadesPage implements OnInit {
     }
 
     if (this.erroresCuentaBancaria.length === 0) {
-      this.bancoService.seleccionarBancoPorIdAsociado(cuentaBancariaModificarActual[0]['id_asociativo_banco'][0]).subscribe(res => 
-        {
-          if (res !== "") {
-            existeBanco = true;
-          }
-        });
+      if (accion === "modificacion") {
+        idAsociativoBancoSegunAccion = cuentaBancariaModificarActual[0]['id_asociativo_banco'];
+        this.bancoService.seleccionarBancoPorIdAsociado(cuentaBancariaModificarActual[0]['id_asociativo_banco']).subscribe(res => 
+          {
+            if (res !== "") {
+              existeBanco = true;
+            }
+          });
+      }
+
+      if (accion === "alta") {
+        idAsociativoBancoSegunAccion = cuentaBancariaModificarActual['id_asociativo_banco']
+        this.bancoService.seleccionarBancoPorIdAsociado(cuentaBancariaModificarActual['id_asociativo_banco']).subscribe(res => 
+          {
+            if (res !== "") {
+              existeBanco = true;
+            }
+          });
+      }
   
       setTimeout(() => {
         if (existeBanco) {
-          this.cuentaComunidadService.modificarCuentaComunidad(cuentaBancariaModificarActual).subscribe(res => console.log(res));
+          if (accion === "alta") {
+            this.cuentaComunidadService.altaCuentaBancariaComunidad(cuentaBancariaModificarActual).subscribe(res => res);
+          }
+          if (accion === "modificacion") {
+            this.cuentaComunidadService.modificarCuentaComunidad(cuentaBancariaModificarActual).subscribe(res => res);
+          }
+          setTimeout(() => {
+            this.actualizarListaCuentasBancariasComunidad(id_comunidad);
+          }, 300);
         } else {
           if (confirm("El Código identificativo del banco no existe ¿Desea crearlo?")) {
             var nombreBanco = prompt("Introduzca el nombre del banco");
@@ -333,22 +406,45 @@ export class MantenimientoComunidadesPage implements OnInit {
                 this.comprobarContenidoDelCampo(nombreBanco, true);
                 let bancoAIngresar = {
                   nombreBanco : nombreBanco,
-                  idAsociativoBanco : cuentaBancariaModificarActual[0]['id_asociativo_banco']
+                  idAsociativoBanco : idAsociativoBancoSegunAccion
                 }
-                this.bancoService.altaBanco(bancoAIngresar).subscribe(res => (res));
-                this.cuentaComunidadService.modificarCuentaComunidad(cuentaBancariaModificarActual).subscribe(res => res);
+                setTimeout(() => {
+                  this.bancoService.altaBanco(bancoAIngresar).subscribe(res => res);
+                }, 300);
+                setTimeout(() => {
+                  if (accion === "modificacion") {
+                    this.cuentaComunidadService.modificarCuentaComunidad(cuentaBancariaModificarActual).subscribe(res => {
+                      setTimeout(() => {
+                        res
+                      }, 300);
+                    });
+                  }
+                  if (accion === "alta") {
+                    this.cuentaComunidadService.altaCuentaBancariaComunidad(cuentaBancariaModificarActual).subscribe(res => 
+                      { setTimeout(() => { res }, 300); }
+                    );
+                  }
+                }, 500);
               } else {
                 // TO-DO
                 console.log("El nombre del banco ya existe en la base de datos");
+                return false;
               }
+              
+              setTimeout(() => {
+                this.actualizarListaCuentasBancariasComunidad(id_comunidad);
+              }, 300);
             }, 300);
           }
         }
-      }, 500);
+      }, 300);
+
+      return true;
     } else {
       setTimeout(() => {
         // TO-DO
         console.log(this.erroresCuentaBancaria);
+        return false;
       }, 400);
     }
   }
@@ -386,25 +482,40 @@ export class MantenimientoComunidadesPage implements OnInit {
   }
 
   /**
-   * Se redirecciona al panel de Cuenta Bancaria
-   */
-  redireccionComponenteCuentaClicada() {
-    document.getElementsByClassName('contenedor-cuenta-clicada')[0]['style'].display = "";
+   * Actualiza la lista de cuentas bancarias por comunidad
+  */
+  actualizarListaCuentasBancariasComunidad(id_comunidad) {
+    // Se actualiza los campos de cuentas añadiendo a la rama del DOM de cuentas el último añadido de cuenta bancaria
+    setTimeout(() => {
+      this.cuentaComunidadService.getCuentasComunidad(id_comunidad).subscribe(res => {
+        setTimeout(() => {
+          this.cuentasBancariasComunidad = [];
+          for (var i = 0 ; i < res['id_asociativo_banco'].length; i++) {
+            this.cuentasBancariasComunidad.push({
+              'id_banco_fk' : res['id_banco_fk'][i],
+              "id_cuenta_comunidad" : res['id_cuenta_comunidad'][i],
+              "nombre_banco" : res['nombre_banco'][i],
+              "id_asociativo_banco" : res['id_asociativo_banco'][i],
+              "grupo1" : res['grupo1'][i],
+              "grupo2" : res['grupo2'][i],
+              "grupo3" : res['grupo3'][i],
+              "grupo4" : res['grupo4'][i]
+            });
+          }
+
+          console.log(res);
+      }, 200);});
+    }, 200);
+
+    // Se limpian los campos de la cuenta bancaria
+    this.elementoIdeAsociativoBanco['el'].value = "";
+    this.elementoGrupo1['el'].value = "";
+    this.elementoGrupo2['el'].value = "";
+    this.elementoGrupo3['el'].value = "";
+    this.elementoGrupo4['el'].value = "";
+
+    document.getElementsByClassName('contenedor-cuenta-clicada')[0]['style'].display = "none";
   }
-
-  /**
-   * Alta de una nueva cuenta bancaria asociada directamente a una comunidad
-   * @param id_comunidad 
-   */
-  altaCuentaBancaria(id_comunidad: number) {
-
-  }
-
-
-
-
-
-
 
 
 

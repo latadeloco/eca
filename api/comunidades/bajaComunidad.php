@@ -7,6 +7,8 @@
   
 
   // REALIZA LA QUERY A LA DB
+  mysqli_query($conexion, "DELETE FROM cuentacomunidad WHERE cuentacomunidad.id_comunidad=$_GET[id_comunidad]");
+
   mysqli_query($conexion, "DELETE FROM comunidad WHERE id_comunidad=$_GET[id_comunidad]");
       
   class Result {}

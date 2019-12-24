@@ -7,6 +7,8 @@
   
 
   // REALIZA LA QUERY A LA DB
+  mysqli_query($conexion, "DELETE FROM cuentacomunidad WHERE cuentacomunidad.id_asociativo_banco=$_GET[id_banco]");
+
   mysqli_query($conexion, "DELETE FROM banco WHERE id_banco=$_GET[id_banco]");
       
   class Result {}

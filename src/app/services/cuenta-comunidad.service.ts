@@ -31,29 +31,12 @@ export class CuentaComunidadService {
   }
 
   /**
-   * Obtener todos los bancos
-   * return Observable
-   */
-  getComunidades() {
-    return this.http.get(`${this.URL}comunidades/comunidades.php`);
-  }
-
-  /**
    * Obtener una comunidad por id_comunidad
    * @params id_banco : number
    * @return Observable
    */
   seleccionarCuentaBancariaComunidadPorId(id_cuenta_comunidad: number) {
     return this.http.get(`${this.URL}cuentasComunidades/obtenerCuentaComunidadPorId.php?id_cuenta_comunidad=${id_cuenta_comunidad}`);
-  }
-
-  /**
-   * Obtener una comunidad por nombre
-   * @params nombre: string
-   * @return Observable
-   */
-  seleccionarBancoPorNombre(nombre: string) {
-    return this.http.get(`${this.URL}comunidades/obtenerComunidadPorNombre.php?nombre=${nombre}`);
   }
 
   /**
@@ -71,8 +54,8 @@ export class CuentaComunidadService {
    * @params banco : Object
    * @return Observable
    */
-  altaComunidad(comunidad) {
-    return this.http.post(`${this.URL}comunidades/altaComunidades.php`, JSON.stringify(comunidad), {responseType: 'text'});
+  altaCuentaBancariaComunidad(cuentaComunidad) {
+    return this.http.post(`${this.URL}cuentasComunidades/altaCuentaBancaria.php`, JSON.stringify(cuentaComunidad), {responseType: 'text'});
   }
 
   /**
@@ -82,5 +65,13 @@ export class CuentaComunidadService {
    */
   eliminarCuentaBancaria(id_cuenta_comunidad : number) {
     return this.http.get(`${this.URL}cuentasComunidades/bajaCuentaBancaria.php?id_cuenta_comunidad=${id_cuenta_comunidad}`);
+  }
+
+  /**
+   * Obtiene la última cuenta de la comunidad seleccionada
+   * @param 
+   */
+  seleecionarUltimaCuentaBancaria(){
+    return this.http.get(`${this.URL}cuentasComunidades/obtenerUltimaCuentaBancaria.php`);
   }
 }

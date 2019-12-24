@@ -1,170 +1,190 @@
 <app-header></app-header>
 
 <ion-content class="ion-padding">
-  <ion-card>
-    <ion-card-title padding="padding">Añadir registro</ion-card-title>
-
+  <ion-card class="ion-padding">
+    <ion-card-title>Añadir registro</ion-card-title>
     <ion-card-content>
-      <div class="registro">
-        <ion-grid>
-          <ion-row>
-            <ion-col
-              size="6"
-              style="display: flex; align-items: center;"
-            >
-              <div class="comunidades">
-                <div class="titulo-comunidad">
-                  <ion-label>Comunidad:</ion-label>
-                </div>
-
-                <div class="selector-comunidad">
-                  <select
-                    class="contenedor-comunidades"
-                    name="comunidades"
-                    id="comunidades"
-                  >
-                    <option value="1">
-                      Cine Pastora.- Vivienda en sanlucar de barrameda numero tal cual bla bla bal balasd fdas fdas fdas fas
-                    </option>
-
-                    <option value="1">Comunidad 1</option>
-
-                    <option value="1">Comunidad 1</option>
-
-                    <option value="1">Comunidad 1</option>
-
-                    <option value="1">Comunidad 1</option>
-
-                    <option value="1">Comunidad 1</option>
-                  </select>
-                </div>
-              </div>
-            </ion-col>
-
-            <ion-col size="6">
-              <ion-row>
-                <ion-col
-                  size="12"
-                  style="display: flex; align-items: center;"
-                >
-                  <div class="iban">
-                    <ion-col size="4">
-                      <div class="titulo-iban">
-                        <ion-label>IBAN:</ion-label>
-                      </div>
-                    </ion-col>
-
-                    <ion-col size="8">
-                      <div class="selector-iban">
-                        <select
-                          class="contenedor-iban"
-                          name="iban"
-                          id="iban"
-                        >
-                          <option value="1">
-                            ES42 0081 5635 0400 0172 2223 - Nombre Banco
-                          </option>
-
-                          <option value="1">IBAN 2</option>
-
-                          <option value="1">IBAN 3</option>
-                        </select>
-                      </div>
-                    </ion-col>
-                  </div>
-                </ion-col>
-              </ion-row>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6">
-              <div
-                class="propietario"
-                style="display: flex; align-items: center;"
-              >
-                <div class="titulo-propietario">
-                  <ion-label>Propietario:</ion-label>
-                </div>
-
-                <div class="texto-propietario">
-                  <ion-input
-                    type="text"
-                    placeholder="Introducir nombre del propietario"
-                  ></ion-input>
-                </div>
-              </div>
-            </ion-col>
-
-            <ion-col size="6">
-              <div
-                class="concepto"
-                style="display: flex; align-items: center;"
-              >
-                <div class="titulo-concepto">
-                  <ion-label>Concepto:</ion-label>
-                </div>
-
-                <div class="texto-concepto">
-                  <ion-input
-                    type="text"
-                    placeholder="Introducir concepto"
-                  ></ion-input>
-                </div>
-              </div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
-
-        <ion-grid>
-          <ion-row>
-            <ion-col size="6">
-              <div
-                class="piso"
-                style="display: flex; align-items: center;"
-              >
-                <div class="titulo-piso">
-                  <ion-label>Piso:</ion-label>
-                </div>
-
-                <div class="texto-piso">
-                  <ion-input
-                    type="text"
-                    placeholder="Introducir piso"
-                  ></ion-input>
-                </div>
-              </div>
-            </ion-col>
-
-            <ion-col size="6">
-              <div
-                class="importe"
-                style="display: flex; align-items: center;"
-              >
-                <div class="titulo-importe">
-                  <ion-label>Importe:</ion-label>
-                </div>
-
-                <div class="numero-importe">
-                  <ion-input
-                    type="number"
-                    placeholder="Importe"
-                  ></ion-input>
-                </div>
-              </div>
-            </ion-col>
-          </ion-row>
-        </ion-grid>
+      <!-- Comunidades -->
+      <div class="container-comunidades ion-padding">
+        <div class="container-lista">
+          <ion-item lines="none">
+            <div class="container-lista-cabecera">
+              <ion-label>Comunidad: </ion-label>
+            </div>
+            <div class="container-seleccion-manual-existentes">
+              <select class="selector-comunidades" name="comunidades" id="">
+                <option value="/" disabled>Comunidad a seleccionar</option>
+                <option  [value]="comunidad.id_comunidad" *ngFor="let comunidad of comunidades">{{ comunidad.nombre }}</option>
+              </select>
+              <ion-input type="text" #nuevaComunidadInput class="anadirNuevaComunidad" placeholder="Añadir una nueva comunidad"></ion-input>
+            </div>
+          </ion-item>
+        </div>
+        <div class="container-boton-nueva-comunidad">
+          <ion-button  class="anadircomunidad" (click)="anadirComunidad(true)">
+            Añadir nueva comunidad
+          </ion-button>
+          <ion-button color="danger" class="cancelacomunidad" (click)="anadirComunidad(false)">
+            <ion-icon slot="icon-only" name="close"></ion-icon>
+          </ion-button>
+        </div>
       </div>
-      <div style="display: flex; justify-content: flex-end;">
-        <ion-button (click)="onClick()">Añadir</ion-button>
+
+      <!-- Cuentas Bancarias relacionadas -->
+
+      <div class="container-cuentas-bancarias ion-padding">
+        <div class="container-cuentas-bancarias-comunidad">
+          <ion-item lines="none">
+            <div class="container-cabecera-cuenta-bancaria">
+              <ion-label>IBAN: </ion-label>
+            </div>
+            <div class="container-selector-manual-existente">
+              <div class="container-cuentas-existentes">
+                <select class="selector-cuentas-bancarias" name="cuentasBancarias" id="">
+                  <option disabled> Cuenta bancaria a seleccionar de la comunidad </option>
+                  <option [value]="cuentaBancaria.id_cuenta_comunidad" *ngFor="let cuentaBancaria of cuentasBancarias"> {{ cuentaBancaria.id_asociativo_banco }} {{ cuentaBancaria.grupo1 }} {{ cuentaBancaria.grupo2 }} {{ cuentaBancaria.grupo3 }} {{ cuentaBancaria.grupo4 }} - {{ cuentaBancaria.nombre_banco }} </option>
+                </select>
+              </div>
+              <div class="container-iban-manual">
+                <ion-input class="idAsociativoBancoClase" type="text" #inputIdAsociativoBanco placeholder="ID banco"></ion-input>
+                <ion-input type="text" #inputGrupo1 placeholder="Grupo 1"></ion-input>
+                <ion-input type="text" #inputGrupo2 placeholder="Grupo 2"></ion-input>
+                <ion-input type="text" #inputGrupo3 placeholder="Grupo 3"></ion-input>
+                <ion-input type="text" #inputGrupo4 placeholder="Grupo 4"></ion-input>
+              </div>
+            </div>
+          </ion-item>
+          <div class="container-botones-cuenta-bancaria">
+            <ion-button class="anadircuenta" (click)="anadirCuentaBancaria(true)">
+              Añadir cuenta bancaria            
+            </ion-button>
+            <ion-button color="danger" class="cancelacuenta" (click)="anadirCuentaBancaria(false)">
+              <ion-icon slot="icon-only" name="close"></ion-icon>
+            </ion-button>
+          </div>
+        </div>
+      </div>
+      <div class="container-importe ion-padding">
+        <ion-item lines="none">
+          <div class="container-cabecera-importe">
+            <ion-label>Importe: </ion-label>
+          </div>
+          <div class="container-seleccion-importe">
+            <ion-input type="number" min="0" placeholder="Añadir un importe al registro"></ion-input>
+          </div>
+        
+        </ion-item>
+      </div>
+
+      <div class="container-concepto ion-padding">
+        <ion-item lines="none">
+          <div class="container-cabecera-concepto">
+            <ion-label>Concepto: </ion-label>
+          </div>
+          <div class="container-seleccion-concepto">
+            <ion-input type="text" placeholder="Añadir el concepto del registro (nombre del propietario)"></ion-input>
+          </div>
+        
+        </ion-item>
+      </div>
+
+      <div class="container-piso ion-padding">
+        <ion-item lines="none">
+          <div class="container-cabecera-piso">
+            <ion-label>Piso: </ion-label>
+          </div>
+          <div class="container-seleccion-piso">
+            <ion-input type="text" placeholder="Añadir el piso del propietario"></ion-input>
+          </div>
+        
+        </ion-item>
+      </div>
+      
+      
+      <div class="container-boton-registro ion-padding">
+        <ion-button (click)="anadirRegistro()">
+          Añadir registro | Fecha: {{ fechaActual }}
+        </ion-button>
       </div>
     </ion-card-content>
   </ion-card>
 
-  <ion-list>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+  <ion-list style="display: none;">
     <ion-list-header>
       <ion-label>Lista de registros:</ion-label>
     </ion-list-header>
