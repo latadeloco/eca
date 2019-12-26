@@ -4,21 +4,20 @@
   
   $json = file_get_contents('php://input'); // RECIBE EL JSON DE ANGULAR
  
-  $params = json_decode($json, true); // DECODIFICA EL JSON Y LO GUARADA EN LA VARIABLE
+  $params = json_decode($json, true)[0]; // DECODIFICA EL JSON Y LO GUARADA EN LA VARIABLE
   
   require("../config.php"); // IMPORTA EL ARCHIVO CON LA CONEXION A LA DB
   $conexion = conexion(); // CREA LA CONEXION
 
-  
-  if (is_array($params)) {
-    $nombre = $params['nombre'];
-  } else {
-    $nombre = $params;
-  }
-  
+  $concepto = $params['concepto'];
+  $importe = $params['importe'];
+  $piso = $params['piso'];
+  $fecha = $params['fecha'];
+  $id_cuenta_comunidad = $params['id_cuenta_comunidad'];
+
   // REALIZA LA QUERY A LA DB
-  mysqli_query($conexion, "INSERT INTO comunidad(nombre) VALUES
-                  ('$nombre')");    
+  mysqli_query($conexion, "INSERT INTO registroparte(concepto, importe, piso, fecha, id_cuenta_comunidad) VALUES
+                  ('$concepto','$importe','$piso','$fecha','$id_cuenta_comunidad')");    
   
   class Result {}
   // GENERA LOS DATOS DE RESPUESTA

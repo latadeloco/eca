@@ -79,4 +79,12 @@ export class BancoService {
   eliminarBanco(id_banco : number) {
     return this.http.get(`${this.URL}/bancos/bajaBanco.php?id_banco=${id_banco}`);
   }
+
+  /**
+   * Seleccionar el último banco
+   * @returns Observable
+   */
+  seleccionarUltimoBanco() {
+    return this.http.get(`${this.URL}/bancos/obtenerUltimoBanco.php`);
+  }
 }

@@ -2,7 +2,13 @@
 
 <ion-content class="ion-padding">
   <ion-card class="ion-padding">
-    <ion-card-title>Añadir registro</ion-card-title>
+    <ion-card-title>
+      <div>
+        <div class="titulo-anadir-registro">
+          Añadir registro
+        </div> 
+      </div>
+    </ion-card-title>
     <ion-card-content>
       <!-- Comunidades -->
       <div class="container-comunidades ion-padding">
@@ -70,7 +76,7 @@
             <ion-label>Importe: </ion-label>
           </div>
           <div class="container-seleccion-importe">
-            <ion-input type="number" min="0" placeholder="Añadir un importe al registro"></ion-input>
+            <ion-input type="number" #importe placeholder="Añadir un importe al registro"></ion-input>
           </div>
         
         </ion-item>
@@ -82,7 +88,7 @@
             <ion-label>Concepto: </ion-label>
           </div>
           <div class="container-seleccion-concepto">
-            <ion-input type="text" placeholder="Añadir el concepto del registro (nombre del propietario)"></ion-input>
+            <ion-input type="text" #concepto placeholder="Añadir el concepto del registro (nombre del propietario)"></ion-input>
           </div>
         
         </ion-item>
@@ -94,7 +100,7 @@
             <ion-label>Piso: </ion-label>
           </div>
           <div class="container-seleccion-piso">
-            <ion-input type="text" placeholder="Añadir el piso del propietario"></ion-input>
+            <ion-input type="text" #piso placeholder="Añadir el piso del propietario"></ion-input>
           </div>
         
         </ion-item>
@@ -109,82 +115,7 @@
     </ion-card-content>
   </ion-card>
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-  
-
-  <ion-list style="display: none;">
+  <ion-list>
     <ion-list-header>
       <ion-label>Lista de registros:</ion-label>
     </ion-list-header>
@@ -204,203 +135,16 @@
             <th>Piso</th>
           </tr>
         </thead>
-
-        <tbody>
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
+        <tbody *ngFor="let registro of listadoRegistrosParte"
+               >
+          <tr *ngIf="registro.fecha === fechaActual">
+            <td> {{ registro.nombre_comunidad }} </td>
+            <td> {{ registro.concepto }} </td>
+            <td> {{ registro.importe }}  </td>
+            <td> {{ registro.id_asociativo_banco }} {{ registro.grupo1 }} {{ registro.grupo2 }} {{ registro.grupo3 }} {{ registro.grupo4 }}</td>
+            <td> {{ registro.piso }} </td>
           </tr>
 
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
-
-          <tr>
-            <td>CINE PASTORA.- VIVIE</td>
-
-            <td>
-              JUAN ESPINAR SALGADO F.ing: 02/01/2018
-            </td>
-
-            <td>29,24€</td>
-
-            <td>0081 5635 0400 0172 2223</td>
-
-            <td></td>
-          </tr>
         </tbody>
       </table>
     </div>
