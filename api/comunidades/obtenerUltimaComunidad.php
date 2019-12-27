@@ -17,12 +17,8 @@
     array_push($datos['maximo'], $resultado['maximo']);
   }
 
-
-  if (sizeof($datos) == 0) {
-    $json = json_encode('null');
-  } else {
     $json = json_encode($datos); // GENERA EL JSON CON LOS DATOS OBTENIDOS
-  }
+  
 
   echo $json; // MUESTRA EL JSON GENERADO
   

@@ -103,17 +103,17 @@ th, td {
     width: 80%;
 }
 
-// Estilo importe, concepto y piso
+// Estilo importe, concepto, piso y fecha
 
 .container-importe, .container-concepto, .container-piso {
     width: 100%;
 }
 
-.container-cabecera-importe, .container-cabecera-concepto, .container-cabecera-piso {
+.container-cabecera-importe, .container-cabecera-concepto, .container-cabecera-piso, .container-cabecera-fecha {
     width: 15%;
 }
 
-.container-seleccion-importe, .container-seleccion-concepto, .container-seleccion-piso {
+.container-seleccion-importe, .container-seleccion-concepto, .container-seleccion-piso, .container-seleccion-fecha {
     width: 85%;
 }
 
@@ -122,4 +122,36 @@ th, td {
 .container-boton-registro {
     width: 100%;
     text-align: end;
+}
+
+// Estilo filtro de búsqueda
+
+.cabecera-filtro-busqueda {
+    display: flex;
+    justify-content: space-between;
+}
+
+.icono-filtro-cerrar-busqueda:hover {
+    cursor: pointer;
+}
+.container-filtro-seleccion-banco {display: flex; justify-content: space-around;}
+.container-filtro-seleccion-banco, .container-filtro-seleccion, .container-filtro-banco-desde-cabecera, 
+.container-seleccion-filtro-desde  {
+    width: 100%;
+}
+
+.container-filtro-seleccion-fecha {
+    display: flex;
+    width: 100%;
+}
+
+
+.container-filtro-seleccion-fecha {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+}
+
+.container-filtro-seleccion-desde-fecha, .container-filtro-seleccion-hasta-fecha {
+    width: 30%;
 }

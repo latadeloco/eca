@@ -9,10 +9,9 @@
   require("../config.php"); // IMPORTA EL ARCHIVO CON LA CONEXION A LA DB
   $conexion = conexion(); // CREA LA CONEXION
 
-
   if (is_array($params)) {
-    $nombre_banco = $params['nombreBanco'];
-    $id_asociativo_banco = $params['idAsociativoBanco'];
+    $nombre_banco = $params['nombre_banco'];
+    $id_asociativo_banco = $params['id_asociativo_banco'];
   } else {
     $nombre_banco = $params->nombre_banco;
     $id_asociativo_banco = $params->id_asociativo_banco;

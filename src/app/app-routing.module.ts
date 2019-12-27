@@ -12,6 +12,10 @@ const routes: Routes = [
     path: 'mantenimiento-bancos',
     loadChildren: () => import('./pages/mantenimiento-bancos/mantenimiento-bancos.module').then( m => m.MantenimientoBancosPageModule)
   },
+  {
+    path: 'report-vertical',
+    loadChildren: () => import('./pages/report-vertical/report-vertical.module').then( m => m.ReportVerticalPageModule)
+  },
 ];
 
 @NgModule({

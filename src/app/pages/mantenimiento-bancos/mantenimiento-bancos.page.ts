@@ -1,6 +1,7 @@
 import { Component, OnInit, Injectable, ViewChild, ElementRef } from '@angular/core';
 import { BancoService } from '../../services/banco.service';
 import { $ } from 'protractor';
+import { logotipo } from '../../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
@@ -12,6 +13,7 @@ import { $ } from 'protractor';
   styleUrls: ['./mantenimiento-bancos.page.scss'],
 })
 export class MantenimientoBancosPage implements OnInit {
+  logo = logotipo.img;
 
   @ViewChild('nombre', {static: false}) elementNombreBanco : ElementRef;
   @ViewChild('idAsociativo', {static: false}) elementoIdAsociativo : ElementRef;
@@ -42,9 +44,9 @@ export class MantenimientoBancosPage implements OnInit {
       {
         for (var i = 0 ; i < respuesta['nombre_banco'].length ; i++) {
           this.listado.push({
-            "idBanco" : respuesta['id_banco'][i], 
-            'nombreBanco' : respuesta['nombre_banco'][i], 
-            "idAsociativoBanco" : respuesta['id_asociativo_banco'][i]
+            "id_banco" : respuesta['id_banco'][i], 
+            'nombre_banco' : respuesta['nombre_banco'][i], 
+            "id_asociativo_banco" : respuesta['id_asociativo_banco'][i]
           });
         }
       });
@@ -84,7 +86,7 @@ export class MantenimientoBancosPage implements OnInit {
       this.errores = [];
       // Comprobar el campo nombre_banco
       // Comprobamos el campo de nombre_banco para que no esté repetido
-      if (this.banco.nombre_banco  == '' || this.banco.nombre_banco == null) {
+      if (this.banco.nombre_banco  === '' || this.banco.nombre_banco === null) {
         this.errores.push("El nombre del banco no puede estar vacío");
       }
       this.seleccionarBancoPorNombre(this.banco.nombre_banco);

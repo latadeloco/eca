@@ -5,6 +5,10 @@
   require("../config.php"); // IMPORTA EL ARCHIVO CON LA CONEXION A LA DB
   $conexion = conexion(); // CREA LA CONEXION
   // REALIZA LA QUERY A LA DB
+
+  echo var_dump($_GET['bancos']);
+  echo var_dump($_GET['fechas']);
+  die();
   $registros = mysqli_query($conexion, "SELECT   cuentacomunidad.id_asociativo_banco as id_banco_fk,
                                                  cuentacomunidad.id_cuenta_comunidad,
                                                  cuentacomunidad.grupo1,
@@ -16,16 +20,16 @@
                                                  banco.nombre_banco
                                         FROM     cuentacomunidad, banco
                                         WHERE    cuentacomunidad.id_asociativo_banco = banco.id_banco AND
-                                                 id_comunidad=$_GET[id_comunidad]");
+                                                 cuentacomunidad.id_cuenta_comunidad=$_GET[id_cuenta_comunidad]");
   $id_banco_fk = array();
   $id_cuenta_comunidad = array();
-  $id_asociativo_banco = array();
   $grupo1 = array();
   $grupo2 = array();
   $grupo3 = array();
   $grupo4 = array();
   $id_comunidad = array();
-
+  
+  $id_asociativo_banco = array();
   $nombre_banco = array();
   $datos = array(
       'id_banco_fk' => $id_banco_fk,

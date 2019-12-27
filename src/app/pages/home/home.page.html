@@ -1,11 +1,119 @@
 <app-header></app-header>
 
 <ion-content class="ion-padding">
-  <ion-card class="ion-padding">
+<!-- Filtro de búsqueda -->
+  <ion-card class="ion-padding filtro-busqueda" style="display: none;">
     <ion-card-title>
+      <div class="cabecera-filtro-busqueda">
+        <div>
+          Filtro de parte
+        </div> 
+        <div class="icono-filtro-cerrar-busqueda">
+          <ion-icon slot="icon-only" color="danger" name="close-circle" (click)="cerrarFiltroBusqueda()"></ion-icon>
+        </div>
+      </div>
+    </ion-card-title>
+    <ion-card-content>
+      <div class="todofiltrobanco">
+        <ion-title style="text-align: center;">Filtrar por banco:</ion-title>
+        <div class="container-filtro-seleccion-banco ion-padding">
+          <div class="container-filtro-seleccion-desde">
+            <ion-item lines="none">
+              <div class="container-filtro-banco-desde-cabecera" style="display: none;">
+                <ion-label>Desde: </ion-label>
+              </div>
+              <div class="container-seleccion-filtro-desde">
+                <select class="selector-filtro-banco-desde" name="bancoFiltro" id="">
+                  <option value="/" disabled> Selecciona banco...</option>
+                  <option  [value]="fbanc.id_banco" *ngFor="let fbanc of filtroBanco">{{ fbanc.nombre_banco }}</option>
+                </select>
+              </div>
+            </ion-item>
+          </div>
+  
+          <div class="container-filtro-seleccion-hasta-banco" style="display: none;">
+            <ion-item lines="none">
+              <div class="container-filtro-banco-hasta-cabecera">
+                <ion-label>Hasta: </ion-label>
+              </div>
+              <div class="container-seleccion-filtro-hasta">
+                <select class="selector-filtro-banco-hasta" name="bancoFiltro" id="">
+                  <option value="/" disabled> Selecciona banco...</option>
+                  <option  [value]="fbanc.id_banco" *ngFor="let fbanc of filtroBanco">{{ fbanc.nombre_banco }}</option>
+                </select>
+              </div>
+            </ion-item>
+          </div>
+        </div>
+      </div>
+      
+      <div class="boton-filtro-busqueda-banco" style="text-align: right;">
+        <ion-button color="warning" class="boton-filtro-anadir-banco" (click)="anadirRangoFiltroBanco()">
+          Añadir rango
+        </ion-button>
+        <ion-button class="boton-filtro-cerrar-banco" color="danger" (click)="quitarFiltroBanco()" style="display: none;">
+          <ion-icon slot="start" name="close"></ion-icon>
+        </ion-button>
+      </div>
+
+
+      <div class="todofiltrofecha">
+        <ion-title style="text-align: center;">Filtrar por fecha:</ion-title>
+        <div class="container-filtro-seleccion-fecha ion-padding">
+          <div class="container-filtro-seleccion-desde-fecha">
+            <ion-item lines="none">
+              <div class="container-filtro-banco-desde-cabecera-fecha">
+                <ion-label> </ion-label>
+              </div>
+              <div class="container-seleccion-filtro-desde-fecha">
+                <ion-item>
+                  <ion-label>Fecha inicial:</ion-label>
+                  <ion-datetime display-format="YYYY.MM.DD" [value]="fechaActual"></ion-datetime>
+                </ion-item>
+              </div>
+            </ion-item>
+          </div>
+  
+          <div class="container-filtro-seleccion-hasta-fecha" style="display: none;">
+            <ion-item lines="none">
+              <div class="container-filtro-fecha-hasta-cabecera">
+                <ion-label></ion-label>
+              </div>
+              <div class="container-seleccion-filtro-hasta-fecha">
+                <ion-item>
+                  <ion-label>Fecha final: </ion-label>
+                  <ion-datetime display-format="YYYY.MM.DD"></ion-datetime>
+                </ion-item>
+              </div>
+            </ion-item>
+          </div>
+        </div>
+      </div>
+      <div class="boton-filtro-busqueda-fecha" style="text-align: right;">
+        <ion-button color="warning" class="boton-filtro-anadir-fecha" (click)="anadirRangoFiltroFecha()">
+          Añadir rango
+        </ion-button>
+        <div class="boton-cerrar-filtro-fecha" style="display: none;">
+          <ion-button class="boton-filtro-cerrar-fecha" color="danger" (click)="quitarFiltroFecha()">
+            <ion-icon slot="start" name="close"></ion-icon>
+          </ion-button>
+        </div>
+      </div>
+
+      <div class="boton-aplicar-filtros">
+        <ion-button (click)="obtenerParteCaja()">
+          Obtener parte de caja
+        </ion-button>
+      </div>
+    </ion-card-content>
+  </ion-card>
+
+<!-- Card para añadir un parte al registro -->
+  <ion-card class="ion-padding">
+    <ion-card-title style="text-align: center; font-size: 4rem; margin-bottom: 2rem;">
       <div>
         <div class="titulo-anadir-registro">
-          Añadir registro
+          Añadir registro al parte de caja
         </div> 
       </div>
     </ion-card-title>
@@ -106,20 +214,34 @@
         </ion-item>
       </div>
       
+      <div class="container-fecha ion-padding">
+        <ion-item lines="none">
+          <div class="container-cabecera-fecha">
+            <ion-label>Fecha: </ion-label>
+          </div>
+          <div class="container-seleccion-fecha">
+            <ion-item>
+              <ion-label>Fecha del registro: </ion-label>
+              <ion-datetime class="fecha" display-format="YYYY.MM.DD"></ion-datetime>
+            </ion-item>
+          </div>
+        
+        </ion-item>
+      </div>
       
       <div class="container-boton-registro ion-padding">
-        <ion-button (click)="anadirRegistro()">
-          Añadir registro | Fecha: {{ fechaActual }}
+        <ion-button color="success" (click)="anadirRegistro()">
+          Añadir registro
         </ion-button>
       </div>
     </ion-card-content>
   </ion-card>
 
   <ion-list>
-    <ion-list-header>
-      <ion-label>Lista de registros:</ion-label>
+    <ion-list-header style="display: flex; justify-content: center; font-size: 3rem;">
+      <ion-label>Lista de registros de hoy ({{ fechaActual }}):</ion-label>
     </ion-list-header>
-
+    <br>
     <div class="container">
       <table>
         <thead>
@@ -150,3 +272,6 @@
     </div>
   </ion-list>
 </ion-content>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />

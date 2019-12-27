@@ -14,11 +14,9 @@
     $datos = $resultado['id_asociativo_banco'];
   }
   
-  if (sizeof($datos) == 0) {
-    $json = json_encode('null');
-  } else {
+
     $json = json_encode($datos); // GENERA EL JSON CON LOS DATOS OBTENIDOS
-  }
+
 
   echo $json; // MUESTRA EL JSON GENERADO
   

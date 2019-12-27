@@ -37,4 +37,11 @@ export class RegistroParteService {
   altaRegistroParte(registroParte) {
     return this.http.post(`${this.URL}registroParte/altaRegistro.php`, JSON.stringify(registroParte), {responseType: 'text'});
   }
+
+  /**
+   * Seleccionar registro por el filtro de bancos y cuentas
+   */
+  seleccionarRegistros(bancos, fechas) {
+    return this.http.get(`${this.URL}registroParte/obtenerRegistrosFiltrado.php?bancos=${bancos}&fechas=${fechas}`, {responseType: 'text'});
+  }
 }

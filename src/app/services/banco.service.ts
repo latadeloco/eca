@@ -87,4 +87,11 @@ export class BancoService {
   seleccionarUltimoBanco() {
     return this.http.get(`${this.URL}/bancos/obtenerUltimoBanco.php`);
   }
+
+  /**
+   * Obtener bancos dentro de un rango inclusivo
+   */
+  obtenerBancosDesdeHasta(bancoInicio, bancoFinal) {
+    return this.http.get(`${this.URL}/bancos/obtenerBancosDesdeHasta.php?bancoInicio=${bancoInicio}&bancoFinal=${bancoFinal}`);
+  }
 }

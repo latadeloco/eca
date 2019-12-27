@@ -3,6 +3,9 @@ import { ComunidadService } from '../../services/comunidad.service';
 import { CuentaComunidadService } from '../../services/cuenta-comunidad.service';
 import { BancoService } from '../../services/banco.service';
 import { RegistroParteService } from '../../services/registro-parte.service';
+import pdfMake from "pdfmake/build/pdfmake";
+import pdfFonts from "pdfmake/build/vfs_fonts";
+pdfMake.vfs = pdfFonts.pdfMake.vfs;
 
 @Component({
   selector: 'app-home',
@@ -23,6 +26,7 @@ export class HomePage implements OnInit {
   @ViewChild('importe', {static : false}) importeInput : ElementRef;
   @ViewChild('concepto', {static : false}) conceptoInput : ElementRef;
   @ViewChild('piso', {static : false}) pisoInput : ElementRef;
+  @ViewChild('fecha', {static : false}) fechaInput : ElementRef;
 
   comunidades = new Array();
   cuentasBancarias = new Array();
@@ -52,14 +56,42 @@ export class HomePage implements OnInit {
 
   listadoRegistrosParte = new Array();
 
+  filtroBanco = new Array();
+  filtroBancoActivo = null;
+  filtroFechaActivo = null;
+
+  listadoAObtenerEnPDF = new Array();
+  pdf : any;
+
   constructor(
     private comunidadService : ComunidadService,
     private cuentaComunidadService : CuentaComunidadService,
     private bancoService : BancoService,
-    private registroParteService : RegistroParteService
-  ) {}
+    private registroParteService : RegistroParteService,
+  ) {
+/*     var dd = {
+      content: [
+        'First paragraph',
+        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
+      ]
+    }
+
+    this.pdf = pdfMake.createPdf(dd);
+    console.log("pasa");
+    this.pdf.open(); */
+  }
 
   ngOnInit() {
+    this.bancoService.getBancos().subscribe(res => {
+      for (let i = 0; i < res['id_banco'].length; i++) {
+        this.filtroBanco.push({
+          'id_banco' : res['id_banco'][i],
+          'nombre_banco' : res['nombre_banco'][i]
+        })
+        
+      }
+    });
+
     document.getElementsByClassName('anadirNuevaComunidad')[0]['style'].display = "none";
     document.getElementsByClassName('container-iban-manual')[0]['style'].display = "none";
     document.getElementsByClassName('cancelacomunidad')[0]['style'].display = "none";
@@ -124,6 +156,7 @@ export class HomePage implements OnInit {
         });
       }
     });
+    var a = document.getElementsByClassName('fecha')[0]['value'] = this.fechaActual;
   }
 
   /**
@@ -245,8 +278,8 @@ export class HomePage implements OnInit {
                 setTimeout(() => {
                   if(!this.nombreBancoExiste) {
                     let bancoNuevo = {
-                      "nombreBanco" : nombreDelBanco,
-                      "idAsociativoBanco" : this.idAsociativoBancoInput['el'].value
+                      "nombre_banco" : nombreDelBanco,
+                      "id_asociativo_banco" : this.idAsociativoBancoInput['el'].value
                     }
                     this.bancoService.altaBanco(bancoNuevo).subscribe(res => console.log(res));
                   }
@@ -336,7 +369,7 @@ export class HomePage implements OnInit {
             "concepto" : this.conceptoInput['el'].value,
             "importe"  : this.importeInput['el'].value,
             "piso"     : this.pisoInput['el'].value,
-            "fecha"    : f.getFullYear() + "-" + mes + "-" + f.getDate(),
+            "fecha"    : document.getElementsByClassName('fecha')[0]['value'],
             "id_cuenta_comunidad" : this.ultimaIdCuentaComunidadSeleccionada
           });
 
@@ -396,5 +429,149 @@ export class HomePage implements OnInit {
         return "";
       }
     }
+  }
+
+
+  /**
+   * Cierra el card de filtro de búsqueda
+   */
+  cerrarFiltroBusqueda() {
+    document.getElementsByClassName('filtro-busqueda')[0]['style'].display = "none";
+  }
+
+  /**
+   * Añadir en el filtro un rango de bancos
+   */
+
+  anadirRangoFiltroBanco() {
+    this.filtroBancoActivo = true;
+    document.getElementsByClassName('container-filtro-banco-desde-cabecera')[0]['style'].display = "";
+    document.getElementsByClassName('container-filtro-seleccion-hasta-banco')[0]['style'].display = "";
+    document.getElementsByClassName('boton-filtro-anadir-banco')[0]['style'].display = "none";
+    document.getElementsByClassName('boton-filtro-cerrar-banco')[0]['style'].display = "";
+  }
+
+  /**
+   * Quita la opción del filtro por banco
+   */
+
+  quitarFiltroBanco() {
+    this.filtroBancoActivo = false;
+    document.getElementsByClassName('container-filtro-banco-desde-cabecera')[0]['style'].display = "none";
+    document.getElementsByClassName('container-filtro-seleccion-hasta-banco')[0]['style'].display = "none";
+    document.getElementsByClassName('boton-filtro-anadir-banco')[0]['style'].display = "";
+    document.getElementsByClassName('boton-filtro-cerrar-banco')[0]['style'].display = "none";
+  }
+
+  /**
+   * Añadir en el filtro un rango de fechas
+   */
+  anadirRangoFiltroFecha() {
+    this.filtroFechaActivo = true;
+    document.getElementsByClassName('container-filtro-seleccion-hasta-fecha')[0]['style'].display = "";
+    document.getElementsByClassName('boton-filtro-anadir-fecha')[0]['style'].display = "none";
+    document.getElementsByClassName('boton-cerrar-filtro-fecha')[0]['style'].display = "";
+  }
+
+  /**
+   * Quitar la opción del filtros por fecha
+   */
+  quitarFiltroFecha() {
+    this.filtroFechaActivo = false;
+    document.getElementsByClassName('container-filtro-seleccion-hasta-fecha')[0]['style'].display = "none";
+    document.getElementsByClassName('boton-filtro-anadir-fecha')[0]['style'].display = "";
+    document.getElementsByClassName('boton-cerrar-filtro-fecha')[0]['style'].display = "none";
+  }
+  
+
+  /**
+   * Obtener parte de caja según los criterios de filtros
+   */
+  obtenerParteCaja() {
+    this.listadoAObtenerEnPDF = [];
+    let bancosObtenidos = new Array();
+    bancosObtenidos = [];
+
+    if (this.filtroBancoActivo) {
+      var selectorFiltroBancoDesde = document.getElementsByClassName('selector-filtro-banco-desde')[0]['value'];
+      var selectorFiltroBancoHasta = document.getElementsByClassName('selector-filtro-banco-hasta')[0]['value'];
+      var aux;
+      if (selectorFiltroBancoDesde > selectorFiltroBancoHasta) {
+        aux = selectorFiltroBancoHasta;
+        selectorFiltroBancoHasta = selectorFiltroBancoDesde;
+        selectorFiltroBancoDesde = aux;
+      }
+
+      this.bancoService.obtenerBancosDesdeHasta(selectorFiltroBancoDesde, selectorFiltroBancoHasta).subscribe(res => {
+        for (let i = 0; i < res['id_banco'].length; i++) {
+          bancosObtenidos.push({
+            "id_banco" : res['id_banco'][i],
+            "nombre_banco" : res['nombre_banco'][i],
+            "id_asociativo_banco" : res['id_asociativo_banco']
+          });
+        }
+      });
+
+      setTimeout(() => {
+        
+      }, 500);
+    }
+    /* this.registroParteService.seleccionarRegistros(bancos, fechas).subscribe(res => console.log(res));
+
+    this.crearObjetoParaPasarloAPDFMake(this.listadoRegistrosParte);
+
+    var dd = {
+      content: [
+        {text: '0081'},
+          this.crearObjetoParaPasarloAPDFMake(this.listadoRegistrosParte),
+        {}
+      ],
+      pageOrientation: 'landscape',
+      }
+
+
+    //console.log(dd);
+    this.pdf = pdfMake.createPdf(dd);
+    this.pdf.open(); */
+  }
+
+
+  /**
+   * Crear objeto de listado de registro para retornarlo
+   */
+  crearObjetoParaPasarloAPDFMake(listadoRegistroParte){
+    var printableRisks = [];
+
+    printableRisks.push({
+      table : {
+        widths : ['*', 300, 60, '*', 60],
+        body: [
+          [
+            {text: 'Comunidad', fontSize: 14, bold: true}, 
+            {text: 'Concepto', fontSize: 14, bold: true},
+            {text: 'Importe', fontSize: 14, bold: true},
+            {text: 'Cuenta Bancaria', fontSize: 14, bold: true},
+            {text: 'Piso', fontSize: 14, bold: true}
+        ],
+        ]
+      }
+    });
+    
+    for (let i = 0; i < listadoRegistroParte.length; i++) {
+      printableRisks[0]['table']['body'].push([
+        {text : listadoRegistroParte[i]['nombre_comunidad'], fontSize: 10}, 
+        {text : listadoRegistroParte[i]['concepto'], fontSize: 10}, 
+        {text : listadoRegistroParte[i]['importe'] + " \€", fontSize: 10}, 
+        {text : listadoRegistroParte[i]['id_asociativo_banco'] + " " + 
+        listadoRegistroParte[i]['grupo1'] + " " + 
+        listadoRegistroParte[i]['grupo2'] + " " + 
+        listadoRegistroParte[i]['grupo3'] + " " + 
+        listadoRegistroParte[i]['grupo4'], fontSize: 10},
+        {text : listadoRegistroParte[i]['piso'], fontSize: 10},
+      ]);
+    }
+
+    return printableRisks;
+
   }
 }
