@@ -8,10 +8,7 @@
       <ion-title slot="start" style="width: 100%;">
           <ion-img routerLink="/home" [src]="logo" style="width: 50px; height: 50px;"></ion-img>
       </ion-title>
-      <ion-icon class="icono-buscar" slot="start" name="search" style="font-size: 3rem;" (click)="porDondeFiltrar()"></ion-icon>
-        <ion-searchbar class="barra-busqueda" slot="start" style="display: none;" placeholder="Buscar comunidad...(puedes añadir filtros de búsqueda)" inputmode="text" type="text" (ionChange)="onSearchChange($event)">
-        </ion-searchbar>
-        <ion-button (click)="hacerReport()" color="warning">
+        <ion-button slot="start" (click)="hacerReport()" color="warning">
           Obtener parte de caja
         </ion-button>
   </ion-toolbar>

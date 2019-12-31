@@ -1,12 +1,13 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { URL } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BancoService {
 
-  URL = "http://192.168.0.116/eurocaja/api/";
+  URL = URL;
   bancos = null;
   banco = {
     nombre_banco : null,

@@ -155,3 +155,10 @@ th, td {
 .container-filtro-seleccion-desde-fecha, .container-filtro-seleccion-hasta-fecha {
     width: 30%;
 }
+
+
+// Total registrado
+
+.container-total-registrado > ion-item > ion-label {
+    font-size: 2rem;
+}

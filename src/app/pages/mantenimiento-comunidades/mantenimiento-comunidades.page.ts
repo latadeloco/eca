@@ -3,6 +3,7 @@ import { ComunidadService } from '../../services/comunidad.service';
 import { CuentaComunidadService } from '../../services/cuenta-comunidad.service';
 import { BancoService } from '../../services/banco.service';
 import { logotipo } from '../../../environments/environment.prod';
+import { ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-mantenimiento-comunidades',
@@ -51,7 +52,8 @@ export class MantenimientoComunidadesPage implements OnInit {
   constructor(
     private comunidadService : ComunidadService,
     private cuentaComunidadService : CuentaComunidadService,
-    private bancoService : BancoService
+    private bancoService : BancoService,
+    private toastController : ToastController
   ) { }
 
   ngOnInit() {
@@ -182,6 +184,11 @@ export class MantenimientoComunidadesPage implements OnInit {
 
         } else {
           // TO-DO
+          this.presentToast(this.errores);
+          setTimeout(() => {
+            document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+          }, 50);
+          console.log(this.errores);
         }
       }, 500);
     }
@@ -426,7 +433,11 @@ export class MantenimientoComunidadesPage implements OnInit {
                 }, 500);
               } else {
                 // TO-DO
-                console.log("El nombre del banco ya existe en la base de datos");
+                this.presentToast("El nombre del banco ya existe en la base de datos");
+                setTimeout(() => {
+                  document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+                }, 50);
+                console.log();
                 return false;
               }
               
@@ -442,6 +453,17 @@ export class MantenimientoComunidadesPage implements OnInit {
     } else {
       setTimeout(() => {
         // TO-DO
+        if (this.erroresCuentaBancaria.length >= 2) {
+          this.presentToast("Hay varios errores al crear la cuenta bancaria, revisa los campos");
+            setTimeout(() => {
+              document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+            }, 50);
+        } else {
+          this.presentToast(this.erroresCuentaBancaria);
+            setTimeout(() => {
+              document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+            }, 50);
+        }
         console.log(this.erroresCuentaBancaria);
         return false;
       }, 400);
@@ -520,7 +542,17 @@ export class MantenimientoComunidadesPage implements OnInit {
 
 
 
-
+  async presentToast(message) {
+    const toast = await this.toastController.create({
+      message,
+      cssClass: "mensajeAdvertencia",
+      duration: 3000,
+      color: "danger",
+      mode : "ios",
+      position: "top"
+    });
+    toast.present();
+  }
 
 
 

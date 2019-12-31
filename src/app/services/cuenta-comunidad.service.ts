@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { URL } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class CuentaComunidadService {
-  URL = "http://192.168.0.116/eurocaja/api/";
+  URL = URL;
   cuentasComunidades = null;
   cuentaComunidad = {
     id_asociativo_cuenta_banco : null,

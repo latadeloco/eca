@@ -53,7 +53,6 @@
   // RECORRE EL RESULTADO Y LO GUARDA EN UN ARRAY
   while ($resultado = mysqli_fetch_array($registros))  
   {
-    
     array_push($datos['nombre_comunidad'], $resultado['nombre_comunidad']);
     array_push($datos['concepto'], $resultado['concepto']);
     array_push($datos['importe'], $resultado['importe']);

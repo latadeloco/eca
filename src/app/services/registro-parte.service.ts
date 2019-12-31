@@ -1,11 +1,12 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
+import { URL } from '../../environments/environment.prod';
 
 @Injectable({
   providedIn: 'root'
 })
 export class RegistroParteService {
-  URL = "http://192.168.0.116/eurocaja/api/";
+  URL = URL;
   registrosPartes = null;
   registroParte = {
     $id_concepto : null,
@@ -41,7 +42,7 @@ export class RegistroParteService {
   /**
    * Seleccionar registro por el filtro de bancos y cuentas
    */
-  seleccionarRegistros(bancos, fechas) {
-    return this.http.get(`${this.URL}registroParte/obtenerRegistrosFiltrado.php?bancos=${bancos}&fechas=${fechas}`, {responseType: 'text'});
+  seleccionarRegistros(banco, fechaInicio, fechaFin) {
+    return this.http.get(`${this.URL}registroParte/obtenerRegistrosFiltrado.php?banco=${banco}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
   }
 }

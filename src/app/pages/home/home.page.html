@@ -68,7 +68,7 @@
               <div class="container-seleccion-filtro-desde-fecha">
                 <ion-item>
                   <ion-label>Fecha inicial:</ion-label>
-                  <ion-datetime display-format="YYYY.MM.DD" [value]="fechaActual"></ion-datetime>
+                  <ion-datetime class="selector-filtro-fecha-desde" display-format="YYYY.MM.DD" [value]="fechaActual"></ion-datetime>
                 </ion-item>
               </div>
             </ion-item>
@@ -82,7 +82,7 @@
               <div class="container-seleccion-filtro-hasta-fecha">
                 <ion-item>
                   <ion-label>Fecha final: </ion-label>
-                  <ion-datetime display-format="YYYY.MM.DD"></ion-datetime>
+                  <ion-datetime class="selector-filtro-fecha-hasta" display-format="YYYY.MM.DD"></ion-datetime>
                 </ion-item>
               </div>
             </ion-item>
@@ -101,8 +101,11 @@
       </div>
 
       <div class="boton-aplicar-filtros">
-        <ion-button (click)="obtenerParteCaja()">
-          Obtener parte de caja
+        <ion-button (click)="obtenerParteCaja('abrir')">
+          Abrir PDF
+        </ion-button>
+        <ion-button color="success" (click)="obtenerParteCaja('descargar')">
+          Descargar PDF
         </ion-button>
       </div>
     </ion-card-content>
@@ -262,12 +265,22 @@
           <tr *ngIf="registro.fecha === fechaActual">
             <td> {{ registro.nombre_comunidad }} </td>
             <td> {{ registro.concepto }} </td>
-            <td> {{ registro.importe }}  </td>
+            <td> {{ registro.importe }} € </td>
             <td> {{ registro.id_asociativo_banco }} {{ registro.grupo1 }} {{ registro.grupo2 }} {{ registro.grupo3 }} {{ registro.grupo4 }}</td>
             <td> {{ registro.piso }} </td>
           </tr>
-
         </tbody>
+        <tr>
+          <td  style="border-left: hidden; border-right: hidden; border-bottom: hidden">
+            <div class="container-total-registrado">
+              <ion-item lines="none">
+                <ion-label>
+                  Balance total registrado: {{ totalRegistradoActual }} €
+                </ion-label>
+              </ion-item>
+            </div>
+          </td>
+        </tr>
       </table>
     </div>
   </ion-list>

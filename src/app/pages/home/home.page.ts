@@ -5,7 +5,10 @@ import { BancoService } from '../../services/banco.service';
 import { RegistroParteService } from '../../services/registro-parte.service';
 import pdfMake from "pdfmake/build/pdfmake";
 import pdfFonts from "pdfmake/build/vfs_fonts";
+import { logotipoPDF } from '../../../environments/environment';
+import { ToastController } from '@ionic/angular';
 pdfMake.vfs = pdfFonts.pdfMake.vfs;
+var alertify = require('alertifyjs');
 
 @Component({
   selector: 'app-home',
@@ -13,6 +16,8 @@ pdfMake.vfs = pdfFonts.pdfMake.vfs;
   styleUrls: ['home.page.scss'],
 })
 export class HomePage implements OnInit {
+  logotipoPDF = logotipoPDF.img;
+
   @ViewChild('nuevaComunidadInput', {static : false}) nuevaComunidadInput : ElementRef;
 
   // Nueva cuenta bancaria
@@ -55,6 +60,7 @@ export class HomePage implements OnInit {
   ultimoBancoSeleccionado = null;
 
   listadoRegistrosParte = new Array();
+  totalRegistradoActual = 0;
 
   filtroBanco = new Array();
   filtroBancoActivo = null;
@@ -68,17 +74,10 @@ export class HomePage implements OnInit {
     private cuentaComunidadService : CuentaComunidadService,
     private bancoService : BancoService,
     private registroParteService : RegistroParteService,
+    private toastController : ToastController
   ) {
-/*     var dd = {
-      content: [
-        'First paragraph',
-        'Another paragraph, this time a little bit longer to make sure, this line will be divided into at least two lines'
-      ]
-    }
 
-    this.pdf = pdfMake.createPdf(dd);
-    console.log("pasa");
-    this.pdf.open(); */
+    
   }
 
   ngOnInit() {
@@ -140,7 +139,11 @@ export class HomePage implements OnInit {
     });
 
     this.registroParteService.getRegistrosPartes().subscribe(res => {
+      console.log(res)
       for (let i = 0; i < res['nombre_comunidad'].length; i++) {
+        if (res['fecha'][i] === this.fechaActual) {
+          this.totalRegistradoActual = this.totalRegistradoActual + Number(res['importe'][i]);
+        }
         this.listadoRegistrosParte.push({
           "nombre_comunidad" : res['nombre_comunidad'][i],
           "concepto" : res['concepto'][i],
@@ -304,13 +307,14 @@ export class HomePage implements OnInit {
       if (this.grupo4Input === null || this.comprobarContenidoDelCampo(this.grupo4Input['el'].value, true) === "") {
         this.listadoErrores.push("El grupo 4 tiene que tener exactamente 4 dígitos");
       }
-    } else {
-      //TO-DO
     }
 
-    // Verificamos que el importe tenga contenido numérico
+    // Verificamos que el importe tenga contenido numérico y que tenga contenido
+    if (this.importeInput['el'].value === "") {
+      this.listadoErrores.push("El importe no puede estar vacío");
+    }
     if (!(/^([0-9])*([\,|\.]([0-9]{2}))?$/.test(this.importeInput['el'].value))) {
-      this.listadoErrores.push("El importe tiene que ser númerico con dos números decimales")
+      this.listadoErrores.push("El importe tiene que ser númerico (parte entera de 6 máximo) con dos números decimales")
     }
 
     // Verificamos que el concepto no esté vacío
@@ -322,7 +326,6 @@ export class HomePage implements OnInit {
       if (this.listadoErrores.length === 0) {
         // en el caso que se le de a una comunidad nueva
         if (this.nuevaComunidad) {
-          console.log("estoy dentro")
           this.comunidadService.altaComunidad(this.nuevaComunidadInput['el'].value).subscribe(res => console.log(res));
           setTimeout(() => {
             this.comunidadService.seleccionarUltimaComunidad().subscribe(res => this.ultimaComunidadSeleccionada = res['maximo'][0]);
@@ -345,19 +348,27 @@ export class HomePage implements OnInit {
         }
         // en el caso que se le de a una cuenta bancaria nueva con una comunidad ya creada
         if (!this.nuevaComunidad && this.nuevaCuentaBancaria) {
-          cuentaComunidadBancariaActual = {
-                'id_asociativo_banco' : this.idAsociativoBancoInput['el'].value,
-                'grupo1' : this.grupo1Input['el'].value,
-                'grupo2' : this.grupo2Input['el'].value,
-                'grupo3' : this.grupo3Input['el'].value,
-                'grupo4' : this.grupo4Input['el'].value,
-                'id_comunidad' : this.ultimaComunidadSeleccionada
-          }
-
-          this.cuentaComunidadService.altaCuentaBancariaComunidad(cuentaComunidadBancariaActual).subscribe(res => console.log(res));
           setTimeout(() => {
-            this.cuentaComunidadService.seleecionarUltimaCuentaBancaria().subscribe(res => this.ultimaIdCuentaComunidadSeleccionada = res['maximo'][0]);
-          }, 200);
+            this.bancoService.getBancos().subscribe(res => (res));
+            cuentaComunidadBancariaActual = {
+                  'id_asociativo_banco' : this.idAsociativoBancoInput['el'].value,
+                  'grupo1' : this.grupo1Input['el'].value,
+                  'grupo2' : this.grupo2Input['el'].value,
+                  'grupo3' : this.grupo3Input['el'].value,
+                  'grupo4' : this.grupo4Input['el'].value,
+                  'id_comunidad' : this.ultimaComunidadSeleccionada
+            }
+  
+            this.cuentaComunidadService.altaCuentaBancariaComunidad(cuentaComunidadBancariaActual).subscribe(res => {
+              console.log("Aquí se crearia la cuenta bancaria asociada a la comunidad")
+              console.log(res)
+            });
+            setTimeout(() => {
+              this.cuentaComunidadService.seleecionarUltimaCuentaBancaria().subscribe(res => {
+                this.ultimaIdCuentaComunidadSeleccionada = res['maximo'][0]
+              });
+            }, 200);
+          }, 300);
         }
 
         setTimeout(() => {
@@ -378,8 +389,17 @@ export class HomePage implements OnInit {
           window.location.reload();
         }, 1000);
       } else {
-        //TO-DO
-        console.log(this.listadoErrores);
+        if (this.listadoErrores.length >= 2) {
+          this.presentToast("Hay varios errores, revisa todos los campos")
+          setTimeout(() => {
+            document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+          }, 50);
+        } else {
+          this.presentToast(this.listadoErrores)
+          setTimeout(() => {
+            document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+          }, 50);
+        }
       }
     }, 500);
   }
@@ -487,54 +507,261 @@ export class HomePage implements OnInit {
   /**
    * Obtener parte de caja según los criterios de filtros
    */
-  obtenerParteCaja() {
+  obtenerParteCaja(opcion) {
+    this.listadoErrores = [];
     this.listadoAObtenerEnPDF = [];
     let bancosObtenidos = new Array();
     bancosObtenidos = [];
+    var selectorFiltroBancoDesde = document.getElementsByClassName('selector-filtro-banco-desde')[0]['value'];
+    var selectorFiltroBancoHasta = document.getElementsByClassName('selector-filtro-banco-hasta')[0]['value'];
+
+    let fechasObtenidas = new Array();
+    var selectorFiltroFechaDesdeSinSlice = document.getElementsByClassName('selector-filtro-fecha-desde')[0]['value'];
+    var selectorFiltroFechaHastaSinSlice = document.getElementsByClassName('selector-filtro-fecha-hasta')[0]['value'];
+    var selectorFiltroFechaDesde = selectorFiltroFechaDesdeSinSlice.slice(0, 10);
+    
+    if (selectorFiltroFechaHastaSinSlice !== undefined) {
+      var selectorFiltroFechaHasta = selectorFiltroFechaHastaSinSlice.slice(0, 10);
+    }
+
 
     if (this.filtroBancoActivo) {
-      var selectorFiltroBancoDesde = document.getElementsByClassName('selector-filtro-banco-desde')[0]['value'];
-      var selectorFiltroBancoHasta = document.getElementsByClassName('selector-filtro-banco-hasta')[0]['value'];
-      var aux;
-      if (selectorFiltroBancoDesde > selectorFiltroBancoHasta) {
-        aux = selectorFiltroBancoHasta;
-        selectorFiltroBancoHasta = selectorFiltroBancoDesde;
-        selectorFiltroBancoDesde = aux;
+      if (selectorFiltroBancoDesde !== "/" && selectorFiltroBancoHasta !== "/") {
+        var aux;
+        if (selectorFiltroBancoDesde > selectorFiltroBancoHasta) {
+          aux = selectorFiltroBancoHasta;
+          selectorFiltroBancoHasta = selectorFiltroBancoDesde;
+          selectorFiltroBancoDesde = aux;
+        }
+        
+        this.bancoService.obtenerBancosDesdeHasta(selectorFiltroBancoDesde, selectorFiltroBancoHasta).subscribe(res => 
+          {
+            for (let i = 0; i < res['id_banco'].length; i++) {
+              bancosObtenidos.push({
+                "id_banco" : res['id_banco'][i],
+                "nombre_banco" : res['nombre_banco'][i]
+              })
+            }
+          });
+      } else {
+        this.presentToast("Selecciona algún banco para filtrar por él")
+        setTimeout(() => {
+          document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+        }, 50);
       }
+    } else {
+      if (selectorFiltroBancoDesde !== "/") {
+        bancosObtenidos.push({
+          "id_banco" : selectorFiltroBancoDesde,
+        })
+      } else {
+        this.presentToast("Selecciona algún banco para filtrar por él")
+        setTimeout(() => {
+          document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+        }, 50);
+      }
+    }
 
-      this.bancoService.obtenerBancosDesdeHasta(selectorFiltroBancoDesde, selectorFiltroBancoHasta).subscribe(res => {
-        for (let i = 0; i < res['id_banco'].length; i++) {
-          bancosObtenidos.push({
-            "id_banco" : res['id_banco'][i],
-            "nombre_banco" : res['nombre_banco'][i],
-            "id_asociativo_banco" : res['id_asociativo_banco']
+    // ahora filtro por fecha
+    if (this.filtroFechaActivo) {
+      var auxfecha;
+      if (selectorFiltroFechaDesde !== undefined && selectorFiltroFechaHasta !== undefined) {
+        if (selectorFiltroFechaDesde > selectorFiltroFechaHasta) {
+          auxfecha = selectorFiltroFechaHasta;
+          selectorFiltroFechaHasta = selectorFiltroFechaDesde;
+          selectorFiltroFechaDesde = auxfecha;
+        }
+        fechasObtenidas.push({
+          "fechaInicio" : selectorFiltroFechaDesde,
+          "fechaFin" : selectorFiltroFechaHasta
+        });
+      } else {
+        this.listadoErrores.push("Debes añadir las fechas en el rango")
+      }
+    } else {
+      if (selectorFiltroFechaDesde !== undefined) {
+        fechasObtenidas.push({
+          "fechaInicio" : selectorFiltroFechaDesde,
+          "fechaFin" : selectorFiltroFechaDesde
+        })
+      } else {
+        this.listadoErrores.push("Selecciona una fecha para el filtrado");
+      }
+    }
+
+
+    // si no hay ningún error
+    setTimeout(() => {
+      if (this.listadoErrores.length === 0) {
+        let listadoObtenidoActual = new Array();
+        let totales = new Array();
+
+        for (let i = 0; i < bancosObtenidos.length; i++) {
+          listadoObtenidoActual.push({
+            "banco" : new Array()
+          });
+          totales.push({
+            "total" : new Array()
           });
         }
-      });
 
-      setTimeout(() => {
+        for (let i = 0; i < bancosObtenidos.length; i++) {
+          var total = 0;
+          this.registroParteService.seleccionarRegistros(
+            bancosObtenidos[i]['id_banco'],
+            fechasObtenidas[0]['fechaInicio'],
+            fechasObtenidas[0]['fechaFin'])
+          .subscribe(res =>
+            {
+              var total = 0;
+              for (let j = 0; j < res['nombre_comunidad'].length; j++) {
+                listadoObtenidoActual[i]['banco'].push(
+                  {
+                    "nombre_banco" : res['nombre_banco'][0],
+                    "nombre_comunidad" : res['nombre_comunidad'][j],
+                    "concepto" : res['concepto'][j],
+                    "importe" : res['importe'][j],
+                    "id_asociativo_banco" : res['id_asociativo_banco'][j],
+                    "grupo1" : res['grupo1'][j],
+                    "grupo2" : res['grupo2'][j],
+                    "grupo3" : res['grupo3'][j],
+                    "grupo4" : res['grupo4'][j],
+                    "piso" : res['piso'][j]
+                  });
+
+                  total = total + Number(res['importe'][j]);
+
+                  if (j === res['nombre_comunidad'].length-1) {
+                    totales[i]['total'].push(total);
+                  }
+              }
+            });
+          }
+          setTimeout(() => {
+            for (let i = 0; i < listadoObtenidoActual.length; i++) {
+              this.creacionInformePorBanco(listadoObtenidoActual[i]['banco'], fechasObtenidas[0]['fechaInicio'], fechasObtenidas[0]['fechaFin'], totales[i]['total'], opcion);
+            }
+          }, 300);
+        } else {
+          //TO-DO
+          this.presentToast(this.listadoErrores);
+          setTimeout(() => {
+            document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+          }, 50);
+        }
         
       }, 500);
     }
-    /* this.registroParteService.seleccionarRegistros(bancos, fechas).subscribe(res => console.log(res));
 
-    this.crearObjetoParaPasarloAPDFMake(this.listadoRegistrosParte);
-
-    var dd = {
-      content: [
-        {text: '0081'},
-          this.crearObjetoParaPasarloAPDFMake(this.listadoRegistrosParte),
-        {}
-      ],
-      pageOrientation: 'landscape',
+    async presentToast(message) {
+      const toast = await this.toastController.create({
+        message,
+        cssClass: "mensajeAdvertencia",
+        duration: 3000,
+        color: "danger",
+        mode : "ios",
+        position: "top"
+      });
+      toast.present();
+    }
+    
+    /**
+     * Creación de un informe
+     */
+    creacionInformePorBanco(listadoObtenido, fechaInicio, fechaFin, total, opcion) {
+      setTimeout(() => {
+      if (listadoObtenido.length !== 0) {
+        
+        this.crearObjetoParaPasarloAPDFMake(listadoObtenido);
+        var nombre = listadoObtenido[0]['nombre_banco'] + "_" + fechaInicio + "_" + fechaFin + ".pdf";
+        var dd = {
+          info: {
+            title: nombre,
+            author: 'Euro-System Informática S.L',
+            subject: 'Software creado por Euro-System Informática S.L',
+            keywords: 'Parte de caja para Terrafinca - Administradores y Gestores Inmobiliarios',
+          },
+          footer: {
+            columns: [
+              { text: 'Informe generado por EuroCaja', alignment: 'right', fontSize: 9, marginRight: 12 }
+            ]
+          },
+          content: [
+            {
+              columns: [
+                {
+                  width: 150,
+                  text: listadoObtenido[0]['id_asociativo_banco'],
+                },
+                {
+                  width: 200,
+                  text: listadoObtenido[0]['nombre_banco'],
+                },
+                {
+                  width: 300,
+                  text: "PARTE DE CAJA",
+                  bold: true,
+                  fontSize : 15
+                },
+                {
+                  width: "auto",
+                  text: fechaInicio + " / " + fechaFin,
+                  italics: true
+                },
+              ]
+            },
+            {
+            },
+              this.crearObjetoParaPasarloAPDFMake(listadoObtenido),
+              {
+                columns: [
+                  {
+                    text: ' '
+                  },
+                ]
+              },
+              {
+                columns: [
+                  {
+                    text: ' '
+                  },
+                ]
+              },
+              {
+                columns: [
+                  {
+                    marginLeft: 400,
+                    width: 470,
+                    text: "TOTAL: ",
+                    fontSize: 15,
+                    italics: true
+                  },
+                  {
+                    width: 200,
+                    text: total + " €",
+                    fontSize: 15,
+                    bold: true
+                  },
+                ]
+              },
+          ],
+          pageOrientation: 'landscape',
+          }
+  
+        this.pdf = pdfMake.createPdf(dd);
+        if (opcion === "abrir") {
+          this.pdf.open();
+        } else if (opcion === "descargar") {
+          this.pdf.download(nombre);
+        }
+      } else {
+        this.presentToast("No existen registros para esta consulta");
+        setTimeout(() => {
+          document.getElementsByClassName('mensajeAdvertencia')[0]['style']['textAlign'] = "center";
+        }, 50);
       }
-
-
-    //console.log(dd);
-    this.pdf = pdfMake.createPdf(dd);
-    this.pdf.open(); */
+    }, 400);
   }
-
 
   /**
    * Crear objeto de listado de registro para retornarlo
