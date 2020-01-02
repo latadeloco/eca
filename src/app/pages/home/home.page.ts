@@ -97,7 +97,22 @@ export class HomePage implements OnInit {
     document.getElementsByClassName('cancelacuenta')[0]['style'].display = "none";
     var f = new Date();
     let mes = f.getMonth()+1;
-    this.fechaActual = f.getFullYear() + "-" + mes + "-" + f.getDate();
+    let mesconcero = "";
+    let dia = f.getDate();
+    let diaconcero = "";
+    if (mes <= 9) {
+      mesconcero = "0" + mes.toString()
+    } else {
+      mesconcero = mes.toString();
+    }
+    if (dia <= 9) {
+      diaconcero = "0" + dia.toString();
+    } else{
+      diaconcero = dia.toString();
+    }
+    console.log(mesconcero);
+    this.fechaActual = f.getFullYear() + "-" + mesconcero + "-" + diaconcero;
+    console.log(this.fechaActual);
     this.comunidadService.getComunidades().subscribe(res => {
       for (var i = 0 ; i < res['nombre'].length ; i++) {
         this.comunidades.push({
