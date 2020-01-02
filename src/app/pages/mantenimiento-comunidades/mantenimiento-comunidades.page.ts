@@ -289,6 +289,7 @@ export class MantenimientoComunidadesPage implements OnInit {
    * @param id_comunidad 
    */
   altaCuentaBancaria(id_comunidad: number) {
+    this.erroresCuentaBancaria = [];
     let cuentaComunidadBancariaActual = {
       'id_asociativo_banco' : this.elementoIdeAsociativoBanco['el'].value,
       'grupo1' : this.elementoGrupo1['el'].value,
@@ -308,11 +309,16 @@ export class MantenimientoComunidadesPage implements OnInit {
    * 
    */
   comprobacionesCuentaBancaria(cuentaBancariaModificarActual, accion, id_comunidad) {
+    this.erroresCuentaBancaria = [];
     let existeBanco = false;
     let idAsociativoBancoSegunAccion = null;
     // Comprobaciones de campos para sean una cadena de 4 dígitos exactos
     // Se comprueba si vienen en array o como cadena y se hace las comprobaciones
     
+    if (this.elementoIdeAsociativoBanco['el'].value === "") {
+      this.erroresCuentaBancaria.push("El código identificativo del banco no puede estar vacío");
+    }
+
     // comprobamos campo id_asociativo_banco si es array o no
     if (Array.isArray(this.elementoIdeAsociativoBanco['el'].value)) {
       if (this.comprobarContenidoDelCampo(this.elementoIdeAsociativoBanco['el'].value[0], true) !== "") {

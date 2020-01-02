@@ -113,8 +113,12 @@ th, td {
     width: 15%;
 }
 
-.container-seleccion-importe, .container-seleccion-concepto, .container-seleccion-piso, .container-seleccion-fecha {
+.container-seleccion-importe, .container-seleccion-concepto, .container-seleccion-piso {
     width: 85%;
+}
+
+.container-seleccion-fecha {
+    width: 30%;
 }
 
 // Estilo botón añadir registro
@@ -161,4 +165,25 @@ th, td {
 
 .container-total-registrado > ion-item > ion-label {
     font-size: 2rem;
+}
+
+// Iconos de acciones
+
+.icono-modificar:hover, .icono-borrar:hover {
+    cursor: pointer;
+}
+
+.icono-modificar, .icono-borrar {
+    color: white;
+    border-radius: 100%;
+    padding: 0.1rem;
+}
+
+.icono-modificar {
+    background-color: green;
+    margin-right: 3px;
+}
+
+.icono-borrar {
+    background-color: red;
 }

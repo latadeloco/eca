@@ -67,8 +67,8 @@
               </div>
               <div class="container-seleccion-filtro-desde-fecha">
                 <ion-item>
-                  <ion-label>Fecha inicial:</ion-label>
-                  <ion-datetime class="selector-filtro-fecha-desde" display-format="YYYY.MM.DD" [value]="fechaActual"></ion-datetime>
+                  <ion-label>Fecha inicial:</ion-label>                  
+                  <ion-datetime [pickerOptions]="customPickerOptionsIni" class="selector-filtro-fecha-desde fechaInicio" display-format="DD.MM.YYYY" [value]="fechaActual"></ion-datetime>
                 </ion-item>
               </div>
             </ion-item>
@@ -82,7 +82,7 @@
               <div class="container-seleccion-filtro-hasta-fecha">
                 <ion-item>
                   <ion-label>Fecha final: </ion-label>
-                  <ion-datetime class="selector-filtro-fecha-hasta" display-format="YYYY.MM.DD"></ion-datetime>
+                  <ion-datetime [pickerOptions]="customPickerOptionsFin" class="selector-filtro-fecha-hasta fechaFin" display-format="DD.MM.YYYY"></ion-datetime>
                 </ion-item>
               </div>
             </ion-item>
@@ -220,12 +220,16 @@
       <div class="container-fecha ion-padding">
         <ion-item lines="none">
           <div class="container-cabecera-fecha">
-            <ion-label>Fecha: </ion-label>
+            <ion-label>Fecha del registro: </ion-label>
           </div>
           <div class="container-seleccion-fecha">
             <ion-item>
-              <ion-label>Fecha del registro: </ion-label>
-              <ion-datetime class="fecha" display-format="YYYY.MM.DD"></ion-datetime>
+              <ion-input #diaRegistro type="text" min="2" max="2" placeholder="Día"></ion-input>
+              <ion-label  lines="none">/</ion-label>
+              <ion-input #mesRegistro type="text" min="2" max="2" placeholder="Mes"></ion-input>
+              <ion-label lines="none">/</ion-label>
+              <ion-input #anioRegistro type="text" min="4" max="4" placeholder="Año"></ion-input>
+
             </ion-item>
           </div>
         
@@ -268,6 +272,11 @@
             <td> {{ registro.importe }} € </td>
             <td> {{ registro.id_asociativo_banco }} {{ registro.grupo1 }} {{ registro.grupo2 }} {{ registro.grupo3 }} {{ registro.grupo4 }}</td>
             <td> {{ registro.piso }} </td>
+            <td> 
+              <div class="acciones-con-registros">
+                <ion-icon class="icono-borrar" slot="icon-only" name="trash" (click)="borrarRegistro(registro.id_registro_parte)"></ion-icon>
+              </div>
+            </td>
           </tr>
         </tbody>
         <tr>

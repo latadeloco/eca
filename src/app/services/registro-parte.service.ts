@@ -45,4 +45,11 @@ export class RegistroParteService {
   seleccionarRegistros(banco, fechaInicio, fechaFin) {
     return this.http.get(`${this.URL}registroParte/obtenerRegistrosFiltrado.php?banco=${banco}&fechaInicio=${fechaInicio}&fechaFin=${fechaFin}`);
   }
+
+  /**
+   * Eliminación de registro
+   */
+  eliminarRegistroParte(id_registro_parte) {
+    return this.http.get(`${this.URL}registroParte/eliminarRegistro.php?id_concepto=${id_registro_parte}`, {responseType: 'text'});
+  }
 }

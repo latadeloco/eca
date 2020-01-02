@@ -7,7 +7,8 @@
   $conexion = conexion(); // CREA LA CONEXION
   // REALIZA LA QUERY A LA DB
 
-  $registros = mysqli_query($conexion, "SELECT comunidad.nombre as nombre_comunidad, 
+  $registros = mysqli_query($conexion, "SELECT registroparte.id_concepto as id_registro_parte,
+                                               comunidad.nombre as nombre_comunidad, 
                                                registroparte.concepto as concepto, 
                                                registroparte.importe as importe, 
                                                banco.id_asociativo_banco as id_asociativo_banco, 
@@ -26,6 +27,7 @@
                                                banco.id_banco = cuentacomunidad.id_asociativo_banco AND
                                                comunidad.id_comunidad = cuentacomunidad.id_comunidad");
 
+  $id_registro_parte = array();
   $nombre_comunidad = array();
   $concepto = array();
   $importe = array();
@@ -38,6 +40,7 @@
   $nombre_banco = array();
   $fecha = array();
   $datos = array(
+    'id_registro_parte' => $id_registro_parte,
     'nombre_comunidad' => $nombre_comunidad,
     'concepto' => $concepto,
     'importe' => $importe,
@@ -53,6 +56,7 @@
   // RECORRE EL RESULTADO Y LO GUARDA EN UN ARRAY
   while ($resultado = mysqli_fetch_array($registros))  
   {
+    array_push($datos['id_registro_parte'], $resultado['id_registro_parte']);
     array_push($datos['nombre_comunidad'], $resultado['nombre_comunidad']);
     array_push($datos['concepto'], $resultado['concepto']);
     array_push($datos['importe'], $resultado['importe']);

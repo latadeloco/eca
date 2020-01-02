@@ -31,7 +31,9 @@ export class HomePage implements OnInit {
   @ViewChild('importe', {static : false}) importeInput : ElementRef;
   @ViewChild('concepto', {static : false}) conceptoInput : ElementRef;
   @ViewChild('piso', {static : false}) pisoInput : ElementRef;
-  @ViewChild('fecha', {static : false}) fechaInput : ElementRef;
+  @ViewChild('diaRegistro', {static : false}) diaInput : ElementRef;
+  @ViewChild('mesRegistro', {static : false}) mesInput : ElementRef;
+  @ViewChild('anioRegistro', {static : false}) anioInput : ElementRef;
 
   comunidades = new Array();
   cuentasBancarias = new Array();
@@ -69,18 +71,65 @@ export class HomePage implements OnInit {
   listadoAObtenerEnPDF = new Array();
   pdf : any;
 
+  customPickerOptionsIni;
+  customPickerOptionsFin;
+  customPickerOptionsReg;
+  fechaInicio = null;
+  fechaFin = null;
+  fechaRegistro = null;
+
   constructor(
     private comunidadService : ComunidadService,
     private cuentaComunidadService : CuentaComunidadService,
     private bancoService : BancoService,
     private registroParteService : RegistroParteService,
     private toastController : ToastController
-  ) {
+  ) {}
 
-    
-  }
 
   ngOnInit() {
+    this.customPickerOptionsIni = {
+      buttons: [{
+        text: 'Cancelar',
+        handler: () => {
+          return false;
+        }
+      },
+      {
+        text: 'Guardar',
+        handler: (event) => {
+          console.log();
+          document.getElementsByClassName("fechaInicio")[0]['value'] = event.year.text + "-" + event.month.text + "-" + event.day.text
+        }
+      }]
+    };
+
+    this.customPickerOptionsFin = {
+      buttons: [{
+        text: 'Cancelar',
+        handler: () => {
+          return false;
+        }
+      },
+      {
+        text: 'Guardar',
+        handler: (event) => document.getElementsByClassName("fechaFin")[0]['value'] = event.year.text + "-" + event.month.text + "-" + event.day.text
+      }]
+    };
+
+    this.customPickerOptionsReg = {
+      buttons: [{
+        text: 'Cancelar',
+        handler: () => {
+          return false;
+        }
+      },
+      {
+        text: 'Guardar',
+        handler: (event) => console.log(event)
+      }]
+    };
+    
     this.bancoService.getBancos().subscribe(res => {
       for (let i = 0; i < res['id_banco'].length; i++) {
         this.filtroBanco.push({
@@ -160,6 +209,7 @@ export class HomePage implements OnInit {
           this.totalRegistradoActual = this.totalRegistradoActual + Number(res['importe'][i]);
         }
         this.listadoRegistrosParte.push({
+          "id_registro_parte" : res['id_registro_parte'][i],
           "nombre_comunidad" : res['nombre_comunidad'][i],
           "concepto" : res['concepto'][i],
           "importe" : res['importe'][i],
@@ -174,7 +224,7 @@ export class HomePage implements OnInit {
         });
       }
     });
-    var a = document.getElementsByClassName('fecha')[0]['value'] = this.fechaActual;
+    //var a = document.getElementsByClassName('fecha')[0]['value'] = this.fechaActual;
   }
 
   /**
@@ -337,6 +387,13 @@ export class HomePage implements OnInit {
       this.listadoErrores.push("El concepto no puede estar vacío")
     }
 
+    // Verificamos que la fecha este correcta
+    if (this.diaInput['el'].value === "") {
+
+    } if (this.comprobarFecha(this.diaInput['el'].value, "2")) {
+      
+    }
+
     setTimeout(() => {
       if (this.listadoErrores.length === 0) {
         // en el caso que se le de a una comunidad nueva
@@ -417,6 +474,14 @@ export class HomePage implements OnInit {
         }
       }
     }, 500);
+  }
+
+  comprobarFecha(dato, tipoDato) {
+    if (tipoDato === "2") {
+
+    } else if (tipoDato === "4") {
+
+    }
   }
 
   /**
@@ -697,7 +762,7 @@ export class HomePage implements OnInit {
           },
           footer: {
             columns: [
-              { text: 'Informe generado por EuroCaja - Parte de caja para Terrafinca - Administradores y Gestores Inmobiliarios', alignment: 'right', fontSize: 9, marginRight: 12 }
+              { text: 'Informe generado por EuroCaja', alignment: 'right', fontSize: 9, marginRight: 12 }
             ]
           },
           content: [
@@ -797,7 +862,7 @@ export class HomePage implements OnInit {
         ]
       }
     });
-    
+
     for (let i = 0; i < listadoRegistroParte.length; i++) {
       printableRisks[0]['table']['body'].push([
         {text : listadoRegistroParte[i]['nombre_comunidad'], fontSize: 10}, 
@@ -814,5 +879,34 @@ export class HomePage implements OnInit {
 
     return printableRisks;
 
+  }
+
+  borrarRegistro(id_registro_parte) {
+    this.registroParteService.eliminarRegistroParte(id_registro_parte).subscribe(res => console.log(res));
+    this.listadoRegistrosParte = [];
+    setTimeout(() => {
+      this.registroParteService.getRegistrosPartes().subscribe(res => {
+        console.log(res)
+        for (let i = 0; i < res['nombre_comunidad'].length; i++) {
+          if (res['fecha'][i] === this.fechaActual) {
+            this.totalRegistradoActual = this.totalRegistradoActual + Number(res['importe'][i]);
+          }
+          this.listadoRegistrosParte.push({
+            "id_registro_parte" : res['id_registro_parte'][i],
+            "nombre_comunidad" : res['nombre_comunidad'][i],
+            "concepto" : res['concepto'][i],
+            "importe" : res['importe'][i],
+            "id_asociativo_banco" : res['id_asociativo_banco'][i],
+            "grupo1" : res['grupo1'][i],
+            "grupo2" : res['grupo2'][i],
+            "grupo3" : res['grupo3'][i],
+            "grupo4" : res['grupo4'][i],
+            "piso" : res['piso'][i],
+            "nombre_banco" : res['nombre_banco'][i],
+            "fecha" : res['fecha'][i]
+          });
+        }
+      });
+    }, 300);
   }
 }
