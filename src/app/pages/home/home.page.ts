@@ -671,7 +671,6 @@ export class HomePage implements OnInit {
     creacionInformePorBanco(listadoObtenido, fechaInicio, fechaFin, total, opcion) {
       setTimeout(() => {
       if (listadoObtenido.length !== 0) {
-        
         this.crearObjetoParaPasarloAPDFMake(listadoObtenido);
         var nombre = listadoObtenido[0]['nombre_banco'] + "_" + fechaInicio + "_" + fechaFin + ".pdf";
         var dd = {
@@ -683,7 +682,7 @@ export class HomePage implements OnInit {
           },
           footer: {
             columns: [
-              { text: 'Informe generado por EuroCaja', alignment: 'right', fontSize: 9, marginRight: 12 }
+              { text: 'Informe generado por EuroCaja - Parte de caja para Terrafinca - Administradores y Gestores Inmobiliarios', alignment: 'right', fontSize: 9, marginRight: 12 }
             ]
           },
           content: [
@@ -738,7 +737,7 @@ export class HomePage implements OnInit {
                   },
                   {
                     width: 200,
-                    text: total + " €",
+                    text: Number.parseFloat(total).toFixed(2) + " €",
                     fontSize: 15,
                     bold: true
                   },
