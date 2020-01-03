@@ -91,9 +91,7 @@ export class HomePage implements OnInit {
     this.customPickerOptionsIni = {
       buttons: [{
         text: 'Cancelar',
-        handler: () => {
-          return false;
-        }
+        role: "cancel"
       },
       {
         text: 'Guardar',
@@ -107,9 +105,7 @@ export class HomePage implements OnInit {
     this.customPickerOptionsFin = {
       buttons: [{
         text: 'Cancelar',
-        handler: () => {
-          return false;
-        }
+        role: "cancel"
       },
       {
         text: 'Guardar',
@@ -134,7 +130,8 @@ export class HomePage implements OnInit {
       for (let i = 0; i < res['id_banco'].length; i++) {
         this.filtroBanco.push({
           'id_banco' : res['id_banco'][i],
-          'nombre_banco' : res['nombre_banco'][i]
+          'nombre_banco' : res['nombre_banco'][i],
+          'id_asociativo_banco' : res['id_asociativo_banco'][i]
         })
         
       }
@@ -388,10 +385,16 @@ export class HomePage implements OnInit {
     }
 
     // Verificamos que la fecha este correcta
-    if (this.diaInput['el'].value === "") {
+    if (this.comprobarFecha(this.diaInput['el'].value, "2") === "") {
+      this.listadoErrores.push("El día tiene que contener 2 números")
+    }
 
-    } if (this.comprobarFecha(this.diaInput['el'].value, "2")) {
-      
+    if (this.comprobarFecha(this.mesInput['el'].value, "2") === "") {
+      this.listadoErrores.push("El mes tiene que contener 2 números")
+    }
+
+    if (this.comprobarFecha(this.anioInput['el'].value, "4") === "") {
+      this.listadoErrores.push("El año tiene que contener 4 números")
     }
 
     setTimeout(() => {
@@ -452,7 +455,7 @@ export class HomePage implements OnInit {
             "concepto" : this.conceptoInput['el'].value,
             "importe"  : this.importeInput['el'].value,
             "piso"     : this.pisoInput['el'].value,
-            "fecha"    : document.getElementsByClassName('fecha')[0]['value'],
+            "fecha"    : this.anioInput['el'].value + "-" + this.mesInput['el'].value + "-" + this.diaInput['el'].value,
             "id_cuenta_comunidad" : this.ultimaIdCuentaComunidadSeleccionada
           });
 
@@ -478,9 +481,17 @@ export class HomePage implements OnInit {
 
   comprobarFecha(dato, tipoDato) {
     if (tipoDato === "2") {
-
+      if (/^([0-9]{2})$/.test(dato)) {
+        return dato;
+      } else {
+        return "";
+      }
     } else if (tipoDato === "4") {
-
+      if (/^([0-9]{4})$/.test(dato)) {
+        return dato;
+      } else {
+        return "";
+      }
     }
   }
 
@@ -537,6 +548,7 @@ export class HomePage implements OnInit {
    */
   cerrarFiltroBusqueda() {
     document.getElementsByClassName('filtro-busqueda')[0]['style'].display = "none";
+    document.getElementsByClassName('contenedor-anadir-registro-al-parte-caja')[0]['style'].display = "";
   }
 
   /**

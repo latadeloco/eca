@@ -23,18 +23,8 @@ export class HeaderComponent implements OnInit {
     this.menuCtrl.toggle();
   }
 
-  porDondeFiltrar() {
-    //document.getElementsByClassName('barra-busqueda')[0]['style'].display = "none";
-  }
-
   hacerReport() {
-    /* let navigationExtras: NavigationExtras = {
-      queryParams: {
-        special: JSON.stringify(this.banco)
-      }
-    };
-    this.ruta.navigate(['report-vertical'], navigationExtras); */
-
     document.getElementsByClassName('filtro-busqueda')[0]['style'].display = "";
+    document.getElementsByClassName('contenedor-anadir-registro-al-parte-caja')[0]['style'].display = "none";
   }
 }
