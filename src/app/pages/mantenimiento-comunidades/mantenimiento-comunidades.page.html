@@ -14,6 +14,11 @@
         <ion-card-content class="ion-padding">
           <div style="display: flex; justify-content: space-around;">
             <ion-input
+              #iban
+              type="text"
+              placeholder="Código Identificativo"
+            ></ion-input>
+            <ion-input
               #idAsociativoBanco
               type="text"
               placeholder="Código Identificativo"
@@ -83,6 +88,7 @@
                 *ngIf="cuentasBancariasComunidad.length !== 0">
                   <div class="container-cuentas-bancarias-comunidad" >
                     <div class="contenedor-por-cuenta-comunidad" *ngFor="let cuenta of cuentasBancariasComunidad" id="{{ cuenta.id_cuenta_comunidad }}">
+                      <div> {{ cuenta.iban }} </div>
                       <div> {{ cuenta.id_asociativo_banco }} </div>
                       <div> {{ cuenta.grupo1 }} </div>
                       <div> {{ cuenta.grupo2 }} </div>

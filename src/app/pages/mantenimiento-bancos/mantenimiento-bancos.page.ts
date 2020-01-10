@@ -19,6 +19,7 @@ export class MantenimientoBancosPage implements OnInit {
   @ViewChild('nombre', {static: false}) elementNombreBanco : ElementRef;
   @ViewChild('idAsociativo', {static: false}) elementoIdAsociativo : ElementRef;
   @ViewChild('eliminarBanco', {static: false}) botonEliminar : ElementRef;
+  @ViewChild('IBAN', {static : false}) ibanInput : ElementRef;
 
   idBanco = null;
   errorPorIdAsociado = null;
@@ -29,7 +30,8 @@ export class MantenimientoBancosPage implements OnInit {
   banco = {
     nombre_banco :  null,
     id_asociativo_banco : null,
-    id_banco : null
+    id_banco : null,
+    iban : null
   }
 
   listado = new Array();
@@ -48,7 +50,8 @@ export class MantenimientoBancosPage implements OnInit {
           this.listado.push({
             "id_banco" : respuesta['id_banco'][i], 
             'nombre_banco' : respuesta['nombre_banco'][i], 
-            "id_asociativo_banco" : respuesta['id_asociativo_banco'][i]
+            "id_asociativo_banco" : respuesta['id_asociativo_banco'][i],
+            "iban" : respuesta["iban"][i]
           });
         }
       });
@@ -200,9 +203,11 @@ export class MantenimientoBancosPage implements OnInit {
         this.banco.id_banco = res['id_banco'][0];
         this.banco.nombre_banco = res['nombre_banco'][0];
         this.banco.id_asociativo_banco = res['id_asociativo_banco'][0];
+        this.banco.iban = res['iban'][0];
 
         this.elementNombreBanco['el'].value = res['nombre_banco'];
         this.elementoIdAsociativo['el'].value = res['id_asociativo_banco'];
+        this.ibanInput['el'].value = res['iban'];
         this.idBanco = res['id_banco'][0];
       }
     );

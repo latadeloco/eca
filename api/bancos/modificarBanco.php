@@ -13,7 +13,8 @@
   // REALIZA LA QUERY A LA DB
   mysqli_query($conexion, "UPDATE banco
     SET nombre_banco='$params->nombre_banco',
-        id_asociativo_banco='$params->id_asociativo_banco'
+        id_asociativo_banco='$params->id_asociativo_banco',
+        iban='$params->iban'
     WHERE id_banco=$params->id_banco");
     
   

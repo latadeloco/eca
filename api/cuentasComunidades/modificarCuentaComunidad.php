@@ -27,8 +27,14 @@ if ($resultadoQuery = mysqli_fetch_array($query))
 {
   $id_banco_array[] = $resultadoQuery['id_banco'];
 }    
-
+  
   $id_banco = implode("','", $id_banco_array);
+
+  if (is_array($params['iban'])) {
+    $iban = implode("','", $params['iban']);
+  } else {
+    $iban = $params['iban'];
+  }
 
   if (is_array($params['grupo1'])) {
     $grupo1 = implode("','",$params['grupo1']);
@@ -66,7 +72,10 @@ if ($resultadoQuery = mysqli_fetch_array($query))
         `grupo4`='$grupo4'
     WHERE `cuentacomunidad`.`id_cuenta_comunidad`='$id_cuenta_comunidad'");
     
-  
+  mysqli_query($conexion, "UPDATE `banco`
+                           SET    `iban`='$iban'
+                           WHERE   `banco`.`id_banco`='$id_banco'");
+                          
   class Result {}
   // GENERA LOS DATOS DE RESPUESTA
   $response = new Result();

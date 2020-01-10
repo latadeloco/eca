@@ -12,14 +12,16 @@
   if (is_array($params)) {
     $nombre_banco = $params['nombre_banco'];
     $id_asociativo_banco = $params['id_asociativo_banco'];
+    $iban = $params['iban'];
   } else {
     $nombre_banco = $params->nombre_banco;
     $id_asociativo_banco = $params->id_asociativo_banco;
+    $iban = $params->iban;
   }
 
   // REALIZA LA QUERY A LA DB
-  mysqli_query($conexion, "INSERT INTO banco(nombre_banco, id_asociativo_banco) VALUES
-                  ('$nombre_banco','$id_asociativo_banco')");    
+  mysqli_query($conexion, "INSERT INTO banco(nombre_banco, id_asociativo_banco, iban) VALUES
+                  ('$nombre_banco','$id_asociativo_banco', '$iban')");    
   
   class Result {}
   // GENERA LOS DATOS DE RESPUESTA

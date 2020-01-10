@@ -11,7 +11,8 @@ export class BancoService {
   bancos = null;
   banco = {
     nombre_banco : null,
-    id_asociativo_banco : null
+    id_asociativo_banco : null,
+    iban : null
   };
   constructor(
     private http : HttpClient,

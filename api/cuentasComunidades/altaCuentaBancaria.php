@@ -59,7 +59,6 @@ if ($resultadoQuery = mysqli_fetch_array($query))
   // REALIZA LA QUERY A LA DB
   mysqli_query($conexion, "INSERT INTO cuentaComunidad(id_asociativo_banco, grupo1, grupo2, grupo3, grupo4, id_comunidad) VALUES
   ('$id_asociativo_banco','$grupo1','$grupo2','$grupo3','$grupo4','$id_comunidad')");  
-    
   
   class Result {}
   // GENERA LOS DATOS DE RESPUESTA

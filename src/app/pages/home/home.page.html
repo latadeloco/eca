@@ -25,7 +25,7 @@
               <div class="container-seleccion-filtro-desde">
                 <select class="selector-filtro-banco-desde" name="bancoFiltro" id="">
                   <option value="/" disabled> Selecciona banco...</option>
-                  <option  [value]="fbanc.id_banco" *ngFor="let fbanc of filtroBanco">{{ fbanc.nombre_banco }} - {{ fbanc.id_asociativo_banco }}</option>
+                  <option  [value]="fbanc.id_banco" *ngFor="let fbanc of filtroBanco">{{ fbanc.iban }} {{ fbanc.nombre_banco }} - {{ fbanc.id_asociativo_banco }}</option>
                 </select>
               </div>
             </ion-item>
@@ -159,10 +159,11 @@
               <div class="container-cuentas-existentes">
                 <select class="selector-cuentas-bancarias" name="cuentasBancarias" id="">
                   <option disabled> Cuenta bancaria a seleccionar de la comunidad </option>
-                  <option [value]="cuentaBancaria.id_cuenta_comunidad" *ngFor="let cuentaBancaria of cuentasBancarias"> {{ cuentaBancaria.id_asociativo_banco }} {{ cuentaBancaria.grupo1 }} {{ cuentaBancaria.grupo2 }} {{ cuentaBancaria.grupo3 }} {{ cuentaBancaria.grupo4 }} - {{ cuentaBancaria.nombre_banco }} </option>
+                  <option [value]="cuentaBancaria.id_cuenta_comunidad" *ngFor="let cuentaBancaria of cuentasBancarias"> {{ cuentaBancaria.iban }} {{ cuentaBancaria.id_asociativo_banco }} {{ cuentaBancaria.grupo1 }} {{ cuentaBancaria.grupo2 }} {{ cuentaBancaria.grupo3 }} {{ cuentaBancaria.grupo4 }} - {{ cuentaBancaria.nombre_banco }} </option>
                 </select>
               </div>
               <div class="container-iban-manual">
+                <ion-input class="iban" type="text" #iban placeholder="IBAN del banco"></ion-input>
                 <ion-input class="idAsociativoBancoClase" type="text" #inputIdAsociativoBanco placeholder="ID banco"></ion-input>
                 <ion-input type="text" #inputGrupo1 placeholder="Grupo 1"></ion-input>
                 <ion-input type="text" #inputGrupo2 placeholder="Grupo 2"></ion-input>
@@ -270,7 +271,7 @@
             <td> {{ registro.nombre_comunidad }} </td>
             <td> {{ registro.concepto }} </td>
             <td> {{ registro.importe }} € </td>
-            <td> {{ registro.id_asociativo_banco }} {{ registro.grupo1 }} {{ registro.grupo2 }} {{ registro.grupo3 }} {{ registro.grupo4 }}</td>
+            <td> {{ registro.iban }} {{ registro.id_asociativo_banco }} {{ registro.grupo1 }} {{ registro.grupo2 }} {{ registro.grupo3 }} {{ registro.grupo4 }}</td>
             <td> {{ registro.piso }} </td>
             <td> 
               <div class="acciones-con-registros">

@@ -13,7 +13,8 @@
                                                  cuentacomunidad.grupo4,
                                                  cuentacomunidad.id_comunidad,
                                                  banco.id_asociativo_banco,
-                                                 banco.nombre_banco
+                                                 banco.nombre_banco,
+                                                 banco.iban
                                         FROM     cuentacomunidad, banco
                                         WHERE    cuentacomunidad.id_asociativo_banco = banco.id_banco AND
                                                  cuentacomunidad.id_cuenta_comunidad=$_GET[id_cuenta_comunidad]");
@@ -27,6 +28,7 @@
   
   $id_asociativo_banco = array();
   $nombre_banco = array();
+  $iban = array();
   $datos = array(
       'id_banco_fk' => $id_banco_fk,
       'id_cuenta_comunidad' => $id_cuenta_comunidad,
@@ -37,7 +39,8 @@
       'id_comunidad' => $id_comunidad,
       
       'id_asociativo_banco' => $id_asociativo_banco,
-      'nombre_banco' => $nombre_banco
+      'nombre_banco' => $nombre_banco,
+      'iban' => $iban,
   );
 
   // SI EL USUARIO EXISTE OBTIENE LOS DATOS Y LOS GUARDA EN UN ARRAY
@@ -53,6 +56,7 @@
     
     array_push($datos['id_asociativo_banco'], $resultado['id_asociativo_banco']);
     array_push($datos['nombre_banco'], $resultado['nombre_banco']);
+    array_push($datos['iban'], $resultado['iban']);
   }
 
 

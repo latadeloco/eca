@@ -10,10 +10,12 @@
   $id_banco = array();
   $nombre_banco = array();
   $id_asociativo_banco = array();
+  $iban = array();
   $datos = array(
       'id_banco' => $id_banco,
       'nombre_banco' => $nombre_banco,
-      'id_asociativo_banco' => $id_asociativo_banco
+      'id_asociativo_banco' => $id_asociativo_banco,
+      'iban' => $iban
   );
   // SI EL USUARIO EXISTE OBTIENE LOS DATOS Y LOS GUARDA EN UN ARRAY
   if ($resultado = mysqli_fetch_array($registros))  
@@ -21,6 +23,7 @@
     array_push($datos['id_banco'], $resultado['id_banco']);
     array_push($datos['nombre_banco'], $resultado['nombre_banco']);
     array_push($datos['id_asociativo_banco'], $resultado['id_asociativo_banco']);
+    array_push($datos['iban'], $resultado['iban']);
   }
 
 

@@ -21,6 +21,7 @@ export class HomePage implements OnInit {
   @ViewChild('nuevaComunidadInput', {static : false}) nuevaComunidadInput : ElementRef;
 
   // Nueva cuenta bancaria
+  @ViewChild('iban', {static: false}) ibanInput : ElementRef;
   @ViewChild('inputIdAsociativoBanco', {static: false}) idAsociativoBancoInput : ElementRef;
   @ViewChild('inputGrupo1', {static: false}) grupo1Input : ElementRef;
   @ViewChild('inputGrupo2', {static: false}) grupo2Input : ElementRef;
@@ -131,7 +132,8 @@ export class HomePage implements OnInit {
         this.filtroBanco.push({
           'id_banco' : res['id_banco'][i],
           'nombre_banco' : res['nombre_banco'][i],
-          'id_asociativo_banco' : res['id_asociativo_banco'][i]
+          'id_asociativo_banco' : res['id_asociativo_banco'][i],
+          'iban' : res['iban'][i]
         })
         
       }
@@ -177,6 +179,7 @@ export class HomePage implements OnInit {
         {
           for (var i = 0; i < res['id_asociativo_banco'].length; i++) {
             this.cuentasBancarias.push({
+              'iban' : res['iban'][i],
               'id_cuenta_comunidad' : res['id_cuenta_comunidad'][i],
               "id_asociativo_banco" : res['id_asociativo_banco'][i],
               "grupo1" : res['grupo1'][i],
@@ -210,6 +213,7 @@ export class HomePage implements OnInit {
           "nombre_comunidad" : res['nombre_comunidad'][i],
           "concepto" : res['concepto'][i],
           "importe" : res['importe'][i],
+          "iban" : res['iban'][i],
           "id_asociativo_banco" : res['id_asociativo_banco'][i],
           "grupo1" : res['grupo1'][i],
           "grupo2" : res['grupo2'][i],
@@ -344,7 +348,8 @@ export class HomePage implements OnInit {
                   if(!this.nombreBancoExiste) {
                     let bancoNuevo = {
                       "nombre_banco" : nombreDelBanco,
-                      "id_asociativo_banco" : this.idAsociativoBancoInput['el'].value
+                      "id_asociativo_banco" : this.idAsociativoBancoInput['el'].value,
+                      "iban" : this.ibanInput['el'].value
                     }
                     this.bancoService.altaBanco(bancoNuevo).subscribe(res => console.log(res));
                   }
@@ -406,6 +411,7 @@ export class HomePage implements OnInit {
             this.comunidadService.seleccionarUltimaComunidad().subscribe(res => this.ultimaComunidadSeleccionada = res['maximo'][0]);
             setTimeout(() => {
               cuentaComunidadBancariaActual = {
+                'iban' : this.ibanInput['el'].value,
                 'id_asociativo_banco' : this.idAsociativoBancoInput['el'].value,
                 'grupo1' : this.grupo1Input['el'].value,
                 'grupo2' : this.grupo2Input['el'].value,
@@ -426,6 +432,7 @@ export class HomePage implements OnInit {
           setTimeout(() => {
             this.bancoService.getBancos().subscribe(res => (res));
             cuentaComunidadBancariaActual = {
+                  'iban' : this.ibanInput['el'].value,
                   'id_asociativo_banco' : this.idAsociativoBancoInput['el'].value,
                   'grupo1' : this.grupo1Input['el'].value,
                   'grupo2' : this.grupo2Input['el'].value,
@@ -625,13 +632,14 @@ export class HomePage implements OnInit {
           selectorFiltroBancoHasta = selectorFiltroBancoDesde;
           selectorFiltroBancoDesde = aux;
         }
-        
+
         this.bancoService.obtenerBancosDesdeHasta(selectorFiltroBancoDesde, selectorFiltroBancoHasta).subscribe(res => 
           {
             for (let i = 0; i < res['id_banco'].length; i++) {
               bancosObtenidos.push({
                 "id_banco" : res['id_banco'][i],
-                "nombre_banco" : res['nombre_banco'][i]
+                "nombre_banco" : res['nombre_banco'][i],
+                "iban" : res['iban'][i]
               })
             }
           });
@@ -713,6 +721,7 @@ export class HomePage implements OnInit {
                     "nombre_comunidad" : res['nombre_comunidad'][j],
                     "concepto" : res['concepto'][j],
                     "importe" : res['importe'][j],
+                    "iban" : res['iban'][i],
                     "id_asociativo_banco" : res['id_asociativo_banco'][j],
                     "grupo1" : res['grupo1'][j],
                     "grupo2" : res['grupo2'][j],
@@ -880,7 +889,9 @@ export class HomePage implements OnInit {
         {text : listadoRegistroParte[i]['nombre_comunidad'], fontSize: 10}, 
         {text : listadoRegistroParte[i]['concepto'], fontSize: 10}, 
         {text : listadoRegistroParte[i]['importe'] + " \€", fontSize: 10}, 
-        {text : listadoRegistroParte[i]['id_asociativo_banco'] + " " + 
+        {text : 
+        listadoRegistroParte[i]['iban'] + " " + 
+        listadoRegistroParte[i]['id_asociativo_banco'] + " " + 
         listadoRegistroParte[i]['grupo1'] + " " + 
         listadoRegistroParte[i]['grupo2'] + " " + 
         listadoRegistroParte[i]['grupo3'] + " " + 
@@ -908,6 +919,7 @@ export class HomePage implements OnInit {
             "nombre_comunidad" : res['nombre_comunidad'][i],
             "concepto" : res['concepto'][i],
             "importe" : res['importe'][i],
+            "iban" : res['iban'][i],
             "id_asociativo_banco" : res['id_asociativo_banco'][i],
             "grupo1" : res['grupo1'][i],
             "grupo2" : res['grupo2'][i],

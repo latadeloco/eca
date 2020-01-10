@@ -18,7 +18,7 @@ export class MantenimientoComunidadesPage implements OnInit {
   @ViewChild('salirComunidad', {static : false}) salirComunidad : ElementRef;
   
   // Elemento de pantalla de modificación de cuentas
-
+  @ViewChild('iban', {static : false}) elementoIban : ElementRef;
   @ViewChild('idAsociativoBanco', {static : false}) elementoIdeAsociativoBanco : ElementRef;
   @ViewChild('grupo1', {static : false}) elementoGrupo1 : ElementRef;
   @ViewChild('grupo2', {static : false}) elementoGrupo2 : ElementRef;
@@ -105,6 +105,7 @@ export class MantenimientoComunidadesPage implements OnInit {
                this.cuentasBancariasComunidad.push({
                  'id_banco_fk' : res['id_banco_fk'][i],
                  "id_cuenta_comunidad" : res['id_cuenta_comunidad'][i],
+                 "iban" : res['iban'][i],
                  "nombre_banco" : res['nombre_banco'][i],
                  "id_asociativo_banco" : res['id_asociativo_banco'][i],
                  "grupo1" : res['grupo1'][i],
@@ -220,14 +221,18 @@ export class MantenimientoComunidadesPage implements OnInit {
     var contCuentaComunidad = document.getElementsByClassName('contenedor-cuenta-clicada')[0];
     contCuentaComunidad['style'].display = "";
     this.cuentaComunidadService.seleccionarCuentaBancariaComunidadPorId(id_cuenta_bancaria).subscribe(res => {
+      this.elementoIban['value'] = res['iban'];
       this.elementoIdeAsociativoBanco['value'] = res['id_asociativo_banco'];
       this.elementoGrupo1['value'] = res['grupo1'];
       this.elementoGrupo2['value'] = res['grupo2'];
       this.elementoGrupo3['value'] = res['grupo3'];
       this.elementoGrupo4['value'] = res['grupo4'];
-      this.tituloCuentaBancariaAModificar =   this.elementoIdeAsociativoBanco['el'].value + " " + this.elementoGrupo1['el'].value + " "
-                                            + this.elementoGrupo1['el'].value + " " + this.elementoGrupo3['el'].value + " "
-                                            + this.elementoGrupo4['el'].value
+      this.tituloCuentaBancariaAModificar =   this.elementoIban['el'].value + " " + 
+                                              this.elementoIdeAsociativoBanco['el'].value + " " + 
+                                              this.elementoGrupo1['el'].value + " " + 
+                                              this.elementoGrupo1['el'].value + " " + 
+                                              this.elementoGrupo3['el'].value + " " + 
+                                              this.elementoGrupo4['el'].value
     });
   }
 
@@ -252,6 +257,7 @@ export class MantenimientoComunidadesPage implements OnInit {
     let cuentaBancariaModificarActual = new Array();
     
     cuentaBancariaModificarActual.push({
+      "iban" : this.elementoIban['el'].value,
       "id_cuenta_comunidad" : this.cuentaBancariaComunidadIdComunidad,
       "id_asociativo_banco" : this.elementoIdeAsociativoBanco['el'].value,
       "grupo1" : this.elementoGrupo1['el'].value,
@@ -405,10 +411,10 @@ export class MantenimientoComunidadesPage implements OnInit {
           }
           if (accion === "modificacion") {
             this.cuentaComunidadService.modificarCuentaComunidad(cuentaBancariaModificarActual).subscribe(res => res);
+            setTimeout(() => {
+              this.actualizarListaCuentasBancariasComunidad(id_comunidad);
+            }, 300);
           }
-          setTimeout(() => {
-            this.actualizarListaCuentasBancariasComunidad(id_comunidad);
-          }, 300);
         } else {
           if (confirm("El Código identificativo del banco no existe ¿Desea crearlo?")) {
             var nombreBanco = prompt("Introduzca el nombre del banco");
@@ -424,10 +430,12 @@ export class MantenimientoComunidadesPage implements OnInit {
                 this.comprobarContenidoDelCampo(nombreBanco, true);
                 let bancoAIngresar = {
                   nombre_banco : nombreBanco,
-                  id_asociativo_banco : idAsociativoBancoSegunAccion
+                  id_asociativo_banco : idAsociativoBancoSegunAccion,
+                  iban : this.elementoIban['el'].value
                 }
                 setTimeout(() => {
                   this.bancoService.altaBanco(bancoAIngresar).subscribe(res => console.log(res));
+
                 }, 300);
                 setTimeout(() => {
                   if (accion === "modificacion") {
@@ -446,7 +454,7 @@ export class MantenimientoComunidadesPage implements OnInit {
                 console.log();
                 return false;
               }
-              
+
               setTimeout(() => {
                 this.actualizarListaCuentasBancariasComunidad(id_comunidad);
               }, 300);
@@ -522,6 +530,7 @@ export class MantenimientoComunidadesPage implements OnInit {
               'id_banco_fk' : res['id_banco_fk'][i],
               "id_cuenta_comunidad" : res['id_cuenta_comunidad'][i],
               "nombre_banco" : res['nombre_banco'][i],
+              "iban": res['iban'][i],
               "id_asociativo_banco" : res['id_asociativo_banco'][i],
               "grupo1" : res['grupo1'][i],
               "grupo2" : res['grupo2'][i],
@@ -535,6 +544,7 @@ export class MantenimientoComunidadesPage implements OnInit {
     }, 200);
 
     setTimeout(() => {
+      this.elementoIban['el'].value = "";
       this.elementoIdeAsociativoBanco['el'].value = "";
       this.elementoGrupo1['el'].value = "";
       this.elementoGrupo2['el'].value = "";

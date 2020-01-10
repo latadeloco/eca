@@ -19,7 +19,8 @@
                                                cuentacomunidad.grupo4 as grupo4, 
                                                registroparte.piso as piso, 
                                                banco.nombre_banco as nombre_banco, 
-                                               registroparte.fecha as fecha
+                                               registroparte.fecha as fecha,
+                                               banco.iban as iban
                                         FROM   registroparte, 
                                                cuentacomunidad, 
                                                banco, 
@@ -41,6 +42,7 @@
   $piso = array();
   $nombre_banco = array();
   $fecha = array();
+  $iban = array();
   $datos = array(
     'nombre_comunidad' => $nombre_comunidad,
     'concepto' => $concepto,
@@ -52,7 +54,8 @@
     'grupo4' => $grupo4,
     'piso' => $piso,
     'nombre_banco' => $nombre_banco,
-    'fecha' => $fecha
+    'fecha' => $fecha,
+    'iban' => $iban
   );
   // RECORRE EL RESULTADO Y LO GUARDA EN UN ARRAY
   while ($resultado = mysqli_fetch_array($registros))  
@@ -69,6 +72,7 @@
     array_push($datos['piso'], $resultado['piso']);
     array_push($datos['nombre_banco'], $resultado['nombre_banco']);
     array_push($datos['fecha'], $resultado['fecha']);
+    array_push($datos['iban'], $resultado['iban']);
   }
   
   $json = json_encode($datos); // GENERA EL JSON CON LOS DATOS OBTENIDOS
